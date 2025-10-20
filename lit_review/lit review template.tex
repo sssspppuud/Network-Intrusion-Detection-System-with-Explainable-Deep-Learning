@@ -1,0 +1,242 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                     %   
+%    Latex Template Literature Review                                 %
+%    Z. Wang 
+%    Oct 2024
+%    University of Exeter                                             %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+% disable author name being replaced with underscores in bibtex
+% \usepackage[style=ieee,dashed=false]{biblatex}
+% unticked checkbox
+\newlist{checkbox}{itemize}{2}
+\setlist[checkbox]{label=$\square$}
+% ticked checkbox
+\newlist{checkbox_t}{itemize}{2}
+\setlist[checkbox_t]{label=$\text{\rlap{$\checkmark$}}\square$}
+
+
+% Page layout settings
+\geometry{
+    a4paper,
+    left=20mm,
+    right=20mm,
+    top=25mm,
+    bottom=25mm
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\singlespacing  % Set the document to single line spacing
+\thispagestyle{empty} % remove page number for the cover page
+
+\begin{center}
+{\bf \LARGE Title of Your Project Topic}\\[0.5cm]
+    \textbf{Your Name} \\[0.2cm]
+    \textbf{Student ID:} 12345678 \\[1cm]
+    % \textbf{Email:} youremail@exeter.ac.uk \\[1cm]
+\end{center}
+
+\section*{Abstract}
+
+\noindent 
+The abstract should have 100-200 word.
+Cras laoreet eros a elit vehicula semper. Phasellus vitae condimentum felis. Suspendisse potenti. Suspendisse purus velit, convallis at bibendum sit amet, feugiat ut nulla. Vestibulum nec pharetra elit, vitae sodales enim. Maecenas tempor nisi quis posuere convallis. Sed fermentum rhoncus gravida. In pellentesque elementum enim, tristique ultrices lacus. Nunc scelerisque a nunc efficitur consectetur. Vivamus in quam quis sapien ullamcorper venenatis. In vestibulum sem orci. In hac habitasse platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque dictum ornare metus, eu pellentesque quam luctus at. 
+
+\vspace*{\fill}
+
+\begin{checkbox}
+    % \item {\bf I have not used any GenAI tools in preparing this assessment.}
+    \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
+\end{checkbox}
+
+%  Uncomment to tick the decalaration
+% \begin{checkbox_t}
+%     \item {\bf I have not used any GenAI tools in preparing this assessment.}
+%     \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
+% \end{checkbox_t}
+
+\vspace{1em}
+{\bf\noindent Signature:} \hrulefill
+
+\newpage
+% reset page number
+\clearpage
+\pagenumbering{arabic} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Section 1
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+This assessment falls under the category of \textbf{AI-Assisted} in the University’s Guidance on use of GenAI in Assessments \cite{assessments}.
+
+You must produce an 8-page report covering the preliminary research you have done to prepare yourself for undertaking your project, together with an initial specification for the project itself.
+
+``Research'' here means reading, analysing and comparing existing material that is relevant to your project topic, and providing a reasoned summary of your findings. 
+
+The kind of material you consult will depend on the nature of your topic. Typically, your project will involve both an external subject area and various computational methods or resources that you will apply to that area (e.g., if you are devising a system for handwriting recognition, you will need to research how humans read and write as well as the computational pattern recognition or image processing tools you will be using). The sources you use may include books, journals, conference papers, web pages, and existing software. All of these will need to be referenced in a correct and consistent style, with the references collected together in bibliography at the end of the document.
+
+The project aims, objectives and deliverables should be defined explicitly. You should provide clear criteria for evaluating the final product and results, i.e., what will count as a successful outcome for your project.
+
+Your submission must comprise three parts, as follows:
+\begin{enumerate}[leftmargin=.6in]
+    \item A separate title page containing your name, a 100-200 word abstract.
+
+    \item The body, which must be no more than  8-page (i.e., 8 sides of A4) and presented with 11pt font with margins of 2cm (single column, single line spacing). A 5-mark deduction will be applied for each page by which the length of the document (excluding the title page and references) exceeds 8 pages.
+    
+    \item The bibliography, also in a font not less than 11 pt. It is expected that this section will take up at least half a side of A4, and is not likely to exceed three sides.
+\end{enumerate}
+
+You must submit your work to ELE2 by the submission deadline provided on the cover of this document.
+
+\section{Use of AI tools in AI-Assisted Assessments}
+
+For AI-Assisted assessments, you may use GenAI tools if you choose to do so. This is because using AI tools in specific ways can assist with your learning and will not inhibit fair assessment of your achievement of the module’s intended learning outcomes \cite{libguidesAI}.
+
+This means: You may use GenAI tools ethically and responsibly in accordance with the purposes in the checked boxes in your assessment brief.
+
+When writing your assessment, you must never use AI tools: 
+\begin{enumerate}[leftmargin=.6in]
+    \item For uses other than those represented by checked boxes in your assessment brief. 
+    \item To translate more than a word or short phrase into English unless agreed in the checked boxes in your assessment brief. 
+    \item To upload sensitive or identifying material to an AI tool.
+    \item To present material that has been generated by AI as your own work or the work of someone else.   
+\end{enumerate}
+
+When submitting your assessment, you must: 
+\begin{enumerate}[leftmargin=.6in]
+    \item Check the box during the submission process, that confirms you have adhered to the university’s academic conduct policy and the expectations on use of GenAI in your assessment brief. 
+    \item Treat the AI tool like a citation from any other source. 
+    \item Include a list of all AI prompts and, where possible, hyperlinks to their output with your references, at the end of your work.  You do not need to include the outputs themselves, just the links. 
+    \item Retain the full outputs generated by the prompts you have used during your assignment for your records. These outputs should be accessible through the hyperlinks which you have submitted with your assignment. If hyperlinks are not produced through the tools you use, save the AI-generated output in a document that you can easily access later (e.g. on OneDrive). You may be asked to produce this material in the event of an academic conduct inquiry. 
+    
+\end{enumerate}
+
+Here is a template \cite{recordAI} that you may use to record your AI use when completing AI-integrated and AI-assisted assignments. You can also create your own document to record AI use if you prefer.
+
+\subsection{How to reference GenAI using a specific referencing style}
+
+Find your referencing style and follow the links to Cite Them Right (CTR) \cite{ctr}. Once you are on the Cite Them Right homepage for your referencing style, go to the ‘Digital and Internet’ tab. You should see a link for Generative AI. Sometimes this is listed under ‘Software’. If your department is using a referencing style that is not included in Cite them right, you should visit the guidance for your style and ask your module convenor for further advice.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Example of a section
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{An example section}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique risus id magna cursus, at suscipit nunc congue. Sed rhoncus magna sed euismod tincidunt. Praesent at lectus massa. Proin iaculis nisl odio, vel porta quam ullamcorper faucibus. Nullam velit urna, rutrum at neque a, lobortis ornare ex. Donec tincidunt lobortis ex a tempor. Vivamus ac ex mollis, scelerisque ligula ac, porttitor leo. Proin condimentum risus nibh, vel cursus nisi ullamcorper id. Pellentesque eget risus vitae nisl ultricies finibus a non tellus. Aenean vehicula neque id tortor ullamcorper blandit. In hac habitasse platea dictumst. Donec eget justo nunc. Donec ligula dolor, varius tempor purus nec, porttitor imperdiet nulla. Curabitur viverra ipsum lectus, fermentum mattis ex facilisis a. Mauris eget mollis nulla. Etiam scelerisque nulla sed mi convallis sagittis. Here is an example citation~\cite{brin1998anatomy}.
+
+\begin{table}[h!]
+\centering
+	\caption{Example of a table.\label{tab:1}}
+   \renewcommand{\arraystretch}{1.1}
+   \setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}|  }
+ \hline
+ \multicolumn{4}{|c|}{Country List} \\
+ \hline
+ Country Name or Area Name& ISO ALPHA 2 Code &ISO ALPHA 3 Code&ISO numeric Code\\
+ \hline
+ Afghanistan   & AF    &AFG&   004\\
+ Aland Islands&   AX  & ALA   &248\\
+ Albania &AL & ALB&  008\\
+ Algeria    &DZ & DZA&  012\\
+ American Samoa&   AS  & ASM&016\\
+ Andorra& AD  & AND   &020\\
+ Angola& AO  & AGO&024\\
+ \hline
+\end{tabular}
+\end{table}
+
+
+Mauris eu nisl quis mauris pharetra laoreet at nec purus. Aenean dictum molestie lacus vitae sagittis. Sed at tempor libero. Aenean auctor mattis justo. Cras vel arcu ac risus dignissim vulputate. Donec nec cursus ipsum. Curabitur nunc mi, vulputate interdum ipsum at, placerat mollis nisl. Cras mattis at tellus non semper. Integer sed mauris commodo eros tempor gravida. Nulla dictum risus massa, vel ultrices nulla elementum non. Maecenas massa risus, consequat at lacus sed, viverra lobortis metus. Here is another example of citation~\cite{brin1998anatomy_2}.
+
+Aliquam placerat risus a tortor commodo volutpat. Donec purus magna, malesuada in diam sit amet, suscipit viverra nisl. Vestibulum erat nisl, ornare ac varius vitae, semper nec quam. Nam ac odio cursus, mollis nisi commodo, cursus turpis. Nulla in risus elit. Integer commodo sit amet velit vel facilisis. Proin nunc sem, aliquam a nisi a, congue pellentesque eros. Ut aliquam tortor a sapien iaculis maximus. Vestibulum a leo sit amet nisl vulputate viverra. Donec in venenatis nisi. Suspendisse pellentesque libero a sem rhoncus, vitae tristique mauris facilisis. Sed ultrices sapien vitae lectus ullamcorper ornare. Integer ac interdum felis, eu auctor nisl.
+
+
+\begin{figure}[b!]
+	\centering	
+	\includegraphics[width=.7\linewidth,height=2in]{example-image-a}
+	\caption{Example of a figure.}\label{fig1}
+\end{figure}
+
+Mauris rutrum nec lectus ac imperdiet. Donec posuere tincidunt nibh id viverra. Nam euismod purus sem, euismod pellentesque nibh tempus nec. Nulla interdum condimentum accumsan. Ut ultricies, enim non imperdiet lobortis, lectus sem condimentum est, non tempus sapien turpis id sem. Morbi porttitor placerat massa. Cras laoreet, nibh ac dapibus ullamcorper, ante felis fermentum est, a volutpat erat nibh in elit. In ultricies, tortor auctor pharetra sagittis, lorem felis ornare nisi, nec vestibulum nunc lacus quis velit. Praesent leo nisi, sagittis eu efficitur non, semper vel metus. Nulla facilisi. Etiam eleifend, enim ac luctus condimentum, magna quam faucibus eros, sed blandit eros augue in ante. Integer massa metus, posuere eu egestas non, dapibus eget magna. Ut eget malesuada leo, condimentum interdum felis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+\subsection{An example sub-section}
+
+Mauris rutrum nec lectus ac imperdiet. Donec posuere tincidunt nibh id viverra. Nam euismod purus sem, euismod pellentesque nibh tempus nec. Nulla interdum condimentum accumsan. Ut ultricies, enim non imperdiet lobortis, lectus sem condimentum est, non tempus sapien turpis id sem. Morbi porttitor placerat massa. Cras laoreet, nibh ac dapibus ullamcorper, ante felis fermentum est, a volutpat erat nibh in elit. In ultricies, tortor auctor pharetra sagittis, lorem felis ornare nisi, nec vestibulum nunc lacus quis velit. Praesent leo nisi, sagittis eu efficitur non, semper vel metus. Nulla facilisi. Etiam eleifend, enim ac luctus condimentum, magna quam faucibus eros, sed blandit eros augue in ante. Integer massa metus, posuere eu egestas non, dapibus eget magna. Ut eget malesuada leo, condimentum interdum felis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+Cras laoreet eros a elit vehicula semper. Phasellus vitae condimentum felis. Suspendisse potenti. Suspendisse purus velit, convallis at bibendum sit amet, feugiat ut nulla. Vestibulum nec pharetra elit, vitae sodales enim. Maecenas tempor nisi quis posuere convallis. Sed fermentum rhoncus gravida. In pellentesque elementum enim, tristique ultrices lacus. Nunc scelerisque a nunc efficitur consectetur. Vivamus in quam quis sapien ullamcorper venenatis. In vestibulum sem orci. In hac habitasse platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque dictum ornare metus, eu pellentesque quam luctus at. 
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    REFERENCES
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\bibliographystyle{IEEEtran}
+% \bibliographystyle{IEEEtran}
+% \bibliography{main}
+
+\newcommand{\bibspace}[0]{\vspace*{-.1cm}}
+\begin{thebibliography}{10}
+
+\bibitem{assessments}
+``Assessments,'' 
+\newblock {University of Exeter. Accessed: September 23, 2025. [Online]}. 
+Available: https://www.exeter.ac.uk/students/infopoints/yourinfopointservices/assessments/
+
+\bibspace
+
+\bibitem{libguidesAI}
+``Generative Artificial Intelligence (GenAI) use in assessments,'' 
+\newblock {University of Exeter. Accessed: September 23, 2025. [Online]}. 
+Available: https://libguides.exeter.ac.uk/referencing/generativeai
+
+\bibspace
+
+\bibitem{recordAI}
+``Record of AI use template,'' 
+\newblock {University of Exeter. Accessed: September 23, 2025. [Online]}. 
+Available: https://libguides.exeter.ac.uk/ld.php?content\_id=35969900
+
+\bibspace
+
+\bibitem{ctr}
+``How to reference GenAI using a specific referencing style,'' 
+\newblock {University of Exeter. Accessed: September 23, 2025. [Online]}. 
+Available: https://libguides.exeter.ac.uk/c.php?g=693244\&p=4971276
+
+\bibspace
+
+\bibitem{brin1998anatomy}
+S. Brin and L. Page, 
+\newblock ``{The anatomy of a large-scale hypertextual web search engine},''
+\newblock in {\em Computer networks and ISDN systems}, vol. 30, no. 1--7, pp. 107--117, 1998.
+
+\bibspace
+
+\bibitem{brin1998anatomy_2}
+S. Brin and L. Page, 
+\newblock ``{The anatomy of a large-scale hypertextual web search engine},''
+\newblock in {\em Computer networks and ISDN systems}, vol. 30, no. 1--7, pp. 107--117, 1998.
+\end{thebibliography}
+
+\end{document}
+
