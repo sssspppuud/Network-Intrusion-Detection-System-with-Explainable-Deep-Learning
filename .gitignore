@@ -1,0 +1,11 @@
+.obsidian
+IoT
+*.png
+*.aux
+*.fdb_latexmk
+*.log
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+*.bbl
