@@ -83,11 +83,12 @@ The abstract should have 100-200 word.
 \section{Introduction}
 
 
-Smart and connected medical devices are becoming increasingly integrated into the delivery of healthcare services, leading to the development of the Internet of Medical Things (IoMT), a subset of the Internet of Things (IoT) that encompasses medical devices. IoMT technology poses many advantages through its enabling of the continuous monitoring of patients’ health. This assists healthcare professionals in making remote diagnoses as well as better informing them to make clinical decisions. As these devices become increasingly interconnected, the vulnerability to various cyber-attacks is made also increases rapidly. This, coupled with the sensitive nature of medical data,  raises a major concern about patients’ privacy, where patients' personal data may be exposed, as well as potential concerns over patients' safety, where IoMT devices are used to carry out treatments on patients.
+
+Smart and connected medical devices are becoming increasingly integrated into the delivery of healthcare services, leading to the development of the Internet of Medical Things (IoMT), a subset of the Internet of Things (IoT) that encompasses medical devices. IoMT technology poses many advantages through its enabling of the continuous monitoring of patients’ health. This assists healthcare professionals in making remote diagnoses as well as better informing them to make clinical decisions, for example, data collected from IoMT devices has been used to predict patients' risk of heart disease \cite{baseer2024healthcare}. With the growing digitalization of healthcare systems, there has also been a large increase in the number of cyberattacks targeting medical infrastructure, according to the HIPAA Journals’ report, there have been 546 healthcare breaches that affect more than 500 people so far in 2025 \cite{hipaajournal}. This, coupled with the sensitive nature of medical data,  raises a major concern about patients’ privacy, where patients' personal data may be exposed, as well as potential concerns over patients' safety, where IoMT devices are used to carry out treatments on patients.
 \\
 Recent research has shown extensively that Machine Learning (ML) can be effectively used to detect network attacks by analyzing the traffic on a network. Compared to traditional network attack detection, such as rule-based systems, ML techniques show significant improvements because they are able to recognise complex patterns in network traffic, which was previously not possible. However, the problem with complex ML techniques is the lack of interpretability in the decisions they make; in the context of healthcare systems, this interpretability is crucial, as medical staff and patients need to trust that IoMT networks are secure. To address this lack of interpretability, this project will aim to develop an Explainable Artificial Intelligence (XAI) model to detect IoMT network attacks, this ensures users of the system are able to understand and trust the model while still providing a high detection accuracy. 
 \\
-This research seeks to design and implement an XAI model that can detect network attacks in an IoMT system, whilst maintaining interpretability in its detections. The proposed model will be trained and evaluated using the CIC2024 IoMT dataset, this is a dataset that has specifically been synthesised to simulate a variety of network attacks in an IoMT network.
+This research seeks to design and implement an XAI model that can detect network attacks in an IoMT system, whilst maintaining interpretability in its detections. The proposed model will be trained and evaluated using the CIC2024 IoMT dataset, a publicly available dataset synthesised by the Canadian Institute for Cybersecurity \cite{dadkhah2024ciciomt2024}. This dataset has been specifically designed to develop and benchmark network attack detection models. It simulates a number of IoMT devices and a wide variety of both benign and malicious network traffic.
 \\
 The primary objectives of this project are: (1) to review current literature on AI-based network attack detection within IoT and IoMT networks; (2) to develop an accurate and interpretable attack detection model and select a suitable XAI technique; (3) Evaluate the models performance using the CIC2024 IoMT dataset; (4) Assess the models interpretability and its suitability for cybersecurity in a healthcare context.
 
@@ -103,7 +104,7 @@ The primary objectives of this project are: (1) to review current literature on 
 
 
 
-
+\section{Literature Review}
 %    REFERENCES
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
