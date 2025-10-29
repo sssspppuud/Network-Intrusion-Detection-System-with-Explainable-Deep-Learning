@@ -1,0 +1,24 @@
+Total Mark: 63%
+
+Comments:
+Introduction & Conclusion:
+The introduction clearly defines the chosen topic and scope, outlines
+the key themes and sources reviewed, explains how sources were selected
+and analysed, and specifies any limitations or delimitations of the 
+review. The conclusion briefly summarises the insights from the 
+literature. The conclusion section can be improved with more in-depth
+summarising of key insights and relating them to the research questions.
+
+Literature Review:
+Overall, this is a decent review with a clear structure, coherent transitions,
+and summary of relevant studies.
+
+It shows some analysis and synthesis; It could have shown more.
+To improve it, engage in a deeper evaluation of the findings and
+draw more connections and comparisons between studies.
+
+Presentation & Style (Including References):
+Overall, the formatting aligns with the IEEE conference style,
+and the chosen review structure is clearly stated. The writing
+is generally clear. Some errors in the references formatting
+were observed in the reference sections.
