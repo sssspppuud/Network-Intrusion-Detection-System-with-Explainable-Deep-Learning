@@ -92,12 +92,20 @@ The primary objectives of this project are: (1) to review current literature on 
 \newpage
 
 \section{Literature Review}
-\subsection{Overview of IoMT and Security Issues}
-A common IoMT system can be divided into three primary layers: perception, network, and application. The perception layer can include sensors and wearable devices such as those used for tracking cardiovascular and heart health, temperature, and sleep monitoring. 
+\subsection{IoMT Architecture and Security Issues}
+IoMT systems are typically divided into three primary layers: perception, network, and applications. \cite{almulla2025layered}.
+\\
+In the perception layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
+\\
+The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. 
+\\
+Moving to the application layer, we find software vulnerabilities where cyber threats, such as phishing and ransomware, can lead to interruptions in medical care and further data breaches. Across these layers, there are three clear points of risk for IoMT technology: patients' data privacy, patients' safety, and disruption to medical systems. 
+\\
+The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to prevent a rise in successful attacks. One highly researched solution to this is Intrusion Detection Systems (IDS).
 
-The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. 
+\subsection{Detection Methods for IoMT Attacks}
 
-The application layer facilitates the processing of this data, making it usable by medical systems and staff. This layered architecture introduces a variety of cybersecurity flaws, where vulnerabilities can easily be exploited between each of these layers. Potentially leading to compromised data privacy for patients, where their information could be leaked in the event of a breach, compromised patient safety, where the information captured by sensors could be tampered with, resulting in incorrect diagnoses and treatments, and system disruptions that cause medical equipment to be interrupted, potentially leading to serious harm to patients.\newpage
+
 \bibliographystyle{IEEEtran}
 \bibliography{main.bib}
 \end{document}
