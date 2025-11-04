@@ -83,30 +83,28 @@ The abstract should have 100-200 word.
 \section{Introduction}
 
 Smart and connected medical devices are increasingly integrated into the delivery of healthcare services, leading to the development of the Internet of Medical Things (IoMT), a subset of the Internet of Things (IoT) encompassing medical equipment and devices. IoMT technology offers many advantages by enabling continuous monitoring of patients’ health. This assists healthcare professionals in making remote diagnoses and better informing their clinical decisions; for example, data collected from IoMT devices has been used to predict patients' risk of heart disease \cite{baseer2024healthcare}. With the growing digitalization of healthcare systems, there has been a significant increase in cyberattacks targeting medical infrastructure. According to the HIPAA Journals’ report, there have been 546 healthcare breaches that affect more than 500 people so far in 2025 \cite{hipaajournal}. This, coupled with the sensitive nature of medical data, raises major concerns about patients’ privacy, where patients' personal data may be exposed, as well as potential concerns about patients' safety, given that IoMT devices are used to deliver treatments.
-\\
+
 Recent research has shown that Machine Learning (ML) can be effectively used to detect network attacks by analyzing network traffic. Compared to traditional network attack detection methods, such as rule-based systems, ML techniques offer significant improvements by recognising complex patterns in network traffic that were previously not possible. However, the problem with complex ML techniques is their lack of interpretability in decision-making; in the context of healthcare systems, this interpretability is crucial, as medical staff and patients need to trust that IoMT networks are secure. To address the lack of interpretable ML models, this project will develop an Explainable Artificial Intelligence (XAI) model to detect network attacks in IoMT systems. This ensures that users of the system can understand and trust the model while still achieving high detection accuracy. 
-\\
+
 This project seeks to design and implement an XAI model that can detect network attacks in an IoMT system, whilst maintaining interpretability in its detections. The proposed model will be trained and evaluated using the CIC2024 IoMT dataset, a publicly available dataset synthesised by the Canadian Institute for Cybersecurity \cite{dadkhah2024ciciomt2024}. This dataset has been specifically designed to develop and benchmark network attack detection models. It simulates a number of IoMT devices and a wide variety of both benign and malicious network traffic.
-\\
+
 The primary objectives of this project are: (1) to review current literature on AI-based network attack detection within IoT and IoMT networks; (2) to develop an accurate and interpretable attack detection model and select a suitable XAI technique; (3) Evaluate the models performance using the CIC2024 IoMT dataset; (4) Assess the models interpretability and its suitability for cybersecurity in a healthcare context.
-\newpage
 
 \section{Literature Review}
-\subsection{IoMT Architecture and Security Issues}
+\subsection{IoMT Architecture and Security Concerns}
 IoMT systems are typically divided into three primary layers: perception, network, and applications. \cite{almulla2025layered}.
-\\
+
 In the perception layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
-\\
+
 The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. 
-\\
+
 Moving to the application layer, we find software vulnerabilities where cyber threats, such as phishing and ransomware, can lead to interruptions in medical care and further data breaches. Across these layers, there are three clear points of risk for IoMT technology: patients' data privacy, patients' safety, and disruption to medical systems. 
-\\
-The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to prevent a rise in successful attacks. One highly researched solution to this is Intrusion Detection Systems (IDS).
 
-\subsection{Detection Methods for IoMT Attacks}
+The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to reduce the number of successful attacks. Effective Intrusion Detection System (IDS) is an essential tool for preventing the wide variety of attacks that can IoMT networks face.
 
+\subsection{ML-Driven IDS in IoMT}
+Traditional Intrusion Detection Systems (IDS) such as signature based methods are not well-suited to the field of IoT networks, this has lead to research in recent years primarily being focused on hybrid Machine Learning (ML) methods for detecting network attacks, including Random Forest and SVM \cite{da2019internet}. These ML-based systems aim to analyse large amounts of network traffic and distinguish between benign and malicious activity. In this section, I will focus on reviewing the most well-documented models used and how their performance is evaluated in IoT and IoMT systems.\bibliographystyle{IEEEtran}
 
-\bibliographystyle{IEEEtran}
-\bibliography{main.bib}
+Continuing with the shift toward ML-driven IDS approaches, early IDS explored the efficacy of algorithms such as Decision Trees and SVMs, both of which achieve promising results when tested on benchmark datasets. For example, a Hybrid Decision Tree tested and evaluated on the NSL-KDD dataset achieves 83\% accuracy, outperforming other ML methods such as SVM and KNN \cite{taghavinejad2020intrusion}. However, this model does not distinguish between attack types such as DoS, MITM, and others, which is desirable for IoMT security; the authors suggest future work addresses this limitation.\bibliography{main.bib}
 \end{document}
 
