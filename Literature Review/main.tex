@@ -102,13 +102,15 @@ Moving to the application layer, we find software vulnerabilities where cyber th
 
 The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to reduce the number of successful attacks. Effective Intrusion Detection System (IDS) is an essential tool for preventing the wide variety of attacks that can IoMT networks face.
 
-\subsection{ML-Driven IDS in IoMT}
+\subsection{ML-Driven IDS in IoMT Environments}
 Traditional Intrusion Detection Systems (IDS) such as signature based methods are not well-suited to the field of IoT networks, this has lead to research in recent years primarily being focused on hybrid Machine Learning (ML) methods for detecting network attacks, including Random Forest and SVM \cite{da2019internet}. These ML-based systems aim to analyse large amounts of network traffic and distinguish between benign and malicious activity. In this section, I will focus on reviewing the most well-documented models used and how their performance is evaluated in IoT and IoMT systems.
 
 Continuing with the shift toward ML-driven IDS approaches, early IDS explored the efficacy of algorithms such as Decision Trees and SVMs, both of which achieve promising results when tested on benchmark datasets. For example, a Hybrid Decision Tree tested and evaluated on the NSL-KDD dataset achieves 83\% accuracy, outperforming other ML methods such as SVM and KNN \cite{taghavinejad2020intrusion}. However, this model does not distinguish between attack types such as DoS, MITM, and others, which is desirable for IoMT security; the authors suggest future work addresses this limitation.
 
-Deep learning methods provide a solution to this; a deep reinforcement learning model was developed and tested alongside traditional ML methods to detect malicious network traffic in IoMT networks. Using the NSL-KDD, the best performing model was the Double Deep Q-Network (DDQN), achieving an accuracy of around 80\% and an F1 score of 0.91\cite{lopez2020application}. Comparing this to the Hybrid Decision Tree, it is clear that this form of deep reinforcement learning excels. A noticeable drawback of deep learning here is the time taken to train the model compared to traditional ML.
+Deep learning methods provide a solution to this, a deep reinforcement learning model was developed and testd alongside traditional ML methods to detect malicious network traffic in IoMT networks. Using the NSL-KDD, the best performing model was the Double Deep Q-Network (DDQN) achieving an accuracy of around 80\% and F1 score of 0.91\cite{lopez2020application}. Comparing this the Hybrid Decision Tree, it is clear that this form of deep reinforcement learning excels in attack detection. A noticeable drawback of deep learning here is the time taken to train the model compared to traditional ML as well as the lack of interpretability it provides.
 
+\subsection{Explainable Artificial Intelligence in Cybersecurity}
+Explainable Artificial Intelligence (XAI) aims to make the predictions made by a deep learning model understandable to humans, this is in the form of showing the features it has decided have played the biggest role in making the final prediction. Obviously, in a healthcare setting, the ability to trust is essential with the IDS system securing an IoMT network because we do not want to risk genuine communications being prevented whilst not allowing malicious actors to cause disruption or breaches to the network.
 
 
 \bibliographystyle{IEEEtran}
