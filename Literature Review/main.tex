@@ -84,20 +84,14 @@ The abstract should have 100-200 word.
 \section{Introduction}
 
 Smart and connected medical devices are increasingly integrated into the delivery of healthcare services, leading to the development of the Internet of Medical Things (IoMT), a subset of the Internet of Things (IoT) encompassing medical equipment and devices. IoMT technology offers many advantages by enabling continuous monitoring of patients’ health. This assists healthcare professionals in making remote diagnoses and better informing their clinical decisions; for example, data collected from IoMT devices has been used to predict patients' risk of heart disease \cite{baseer2024healthcare}. With the growing digitalization of healthcare systems, there has been a significant increase in cyberattacks targeting medical infrastructure. According to the HIPAA Journals’ report, there have been 546 healthcare breaches that affect more than 500 people so far in 2025 \cite{hipaajournal}. This, coupled with the sensitive nature of medical data, raises major concerns about patients’ privacy, where patients' personal data may be exposed, as well as potential concerns about patients' safety, given that IoMT devices are used to deliver treatments.
-
 Recent research has shown that Machine Learning (ML) can be effectively used to detect network attacks by analyzing network traffic. Compared to traditional network attack detection methods, such as rule-based systems, ML techniques offer significant improvements by recognising complex patterns in network traffic that were previously not possible. However, the problem with complex ML techniques is their lack of interpretability in decision-making; in the context of healthcare systems, this interpretability is crucial, as medical staff and patients need to trust that IoMT networks are secure. To address the lack of interpretable ML models, this project will develop an Explainable Artificial Intelligence (XAI) model to detect network attacks in IoMT systems. This ensures that users of the system can understand and trust the model while still achieving high detection accuracy. 
-
 This project seeks to design and implement an XAI model that can detect network attacks in an IoMT system, whilst maintaining interpretability in its detections. The proposed model will be trained and evaluated using the CIC2024 IoMT dataset, a publicly available dataset synthesised by the Canadian Institute for Cybersecurity \cite{dadkhah2024ciciomt2024}. This dataset has been specifically designed to develop and benchmark network attack detection models. It simulates a number of IoMT devices and a wide variety of both benign and malicious network traffic.
 \section{Literature Review}
 \subsection{IoMT Architecture and Security Concerns}
 IoMT systems are typically divided into three primary layers: perception, network, and applications. \cite{almulla2025layered}.
-
 In the perception layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
-
 The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. 
-
 Moving to the application layer, we find software vulnerabilities where cyber threats, such as phishing and ransomware, can lead to interruptions in medical care and further data breaches. Across these layers, there are three clear points of risk for IoMT technology: patients' data privacy, patients' safety, and disruption to medical systems. 
-
 The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to reduce the number of successful attacks. Effective Intrusion Detection System (IDS) is an essential tool for preventing the wide variety of attacks that can IoMT networks face.
 
 \subsection{ML-Driven IDS in IoMT Environments}
@@ -119,14 +113,14 @@ There is limited work in applying XAI techniques specifically to IoMT scenarios,
 The accuracy and reliability of Machine Learning (ML) based Intrusion Detection Systems (IDS) are primarily dependent on the quality and the realism of the data used to train, validate and test the model. This is especially important in IoMT settings because the data transmitted in these networks are fundamentally more sensitive than a typical IoT network, making the need for secure communications essential. This section will critically evaluate the available datasets that have previously been used in ML-driven IDS models, discuss the limitations and justify the selection of the CIC2024 IoMT Dataset for this projects specific focus.
 The dataset, NSL-KDD \cite{5356528}, frequently mentioned in the previous sections of this literature review, has been used extensively in training IDS models. This dataset was synthesised to improve upon its predecessor and has been able to produce promising results in many research application. However, this dataset has drawbacks such as its high redundancy of its records, which can lead to poor generalization in ML models \cite{revathi2013detailed}. This dataset would not be suitable for the model proposed in this report because it does not reflect an accurate IoMT system.
 Newer datasets provide significant improvements of NSL-KDD, one notable example is the CICIDS2017 dataset, this dataset includes more realistic network traffic in IoT networks. However, this would also not be suited to IoMT systems due to it not containing common examples of network traffic such as lightweight protocols MQTT and Bluetooth which are used by IoMT devices. 
-To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset. This dataset was specifically synthesised for benchmarking security systems for IoMT. It involves traffic types missing from the previously mentioned datasets including common protocols used by IoMT such as MQTT and Bluetooth. The dataset also provides a wide variety of attack vectors and devices connected to the network. \cite{dadkhah2024ciciomt2024}.
+To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset \cite{dadkhah2024ciciomt2024}. This dataset was specifically synthesised for benchmarking security systems for IoMT. It involves traffic types missing from the previously mentioned datasets including common protocols used by IoMT such as MQTT and Bluetooth. This dataset also provides a wide variety of current and relevant attack vectors faced by real world IoMT networks.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.6\linewidth]{images/inline-topology.jpg}
     \caption{CICIoMT2024 topology. Source: \cite{dadkhah2024ciciomt2024}}
     \label{fig:CIC2024IoMT_Toplogy}
 \end{figure}
-
+The structure of the dataset will guide the development of this model. Due to the large class imbalance between benign and malicious network traffic, the evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision. 
 
 
 \section{Project Specification}
@@ -140,6 +134,12 @@ The primary objectives I will follow this project are outlined as followed:
     \item Evaluate the models performance using the CIC2024 IoMT dataset
     \item Assess the models interpretability and its suitability for cybersecurity specifically to a healthcare context
 \end{itemize}
+
+\subsection{Gantt Chart Timeline}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.1\linewidth]{images/ganttchart1.png}
+\end{figure}
 
 \newpage
 \bibliographystyle{IEEEtran}
