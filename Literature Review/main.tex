@@ -18,6 +18,7 @@
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{multirow}
+\usepackage{graphicx}
 % disable author name being replaced with underscores in bibtex
 % \usepackage[style=ieee,dashed=false]{biblatex}
 % unticked checkbox
@@ -119,6 +120,12 @@ The accuracy and reliability of Machine Learning (ML) based Intrusion Detection 
 The dataset, NSL-KDD \cite{5356528}, frequently mentioned in the previous sections of this literature review, has been used extensively in training IDS models. This dataset was synthesised to improve upon its predecessor and has been able to produce promising results in many research application. However, this dataset has drawbacks such as its high redundancy of its records, which can lead to poor generalization in ML models \cite{revathi2013detailed}. This dataset would not be suitable for the model proposed in this report because it does not reflect an accurate IoMT system.
 Newer datasets provide significant improvements of NSL-KDD, one notable example is the CICIDS2017 dataset, this dataset includes more realistic network traffic in IoT networks. However, this would also not be suited to IoMT systems due to it not containing common examples of network traffic such as lightweight protocols MQTT and Bluetooth which are used by IoMT devices. 
 To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset. This dataset was specifically synthesised for benchmarking security systems for IoMT. It involves traffic types missing from the previously mentioned datasets including common protocols used by IoMT such as MQTT and Bluetooth. The dataset also provides a wide variety of attack vectors and devices connected to the network. \cite{dadkhah2024ciciomt2024}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{images/inline-topology.jpg}
+    \caption{CICIoMT2024 topology. Source: \cite{dadkhah2024ciciomt2024}}
+    \label{fig:CIC2024IoMT_Toplogy}
+\end{figure}
 
 
 
