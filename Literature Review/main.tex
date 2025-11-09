@@ -125,20 +125,25 @@ The structure of the dataset will guide the development of this model. Due to th
 
 \section{Project Specification}
 \subsection{Motivation}
-The use of IoMT systems continues to spread in the field of modern healthcare, with many routin health checks now able to be performed remotely and continuously. Unfortunately, with this increase of its use, there has also been an increase in the amount of cyber-attacks focused on healthcare services  \cite{hipaajournal}. The main goal and motivation of this project is to address the lack of trust that can be placed in Machine Learning based Intrusion Detection Systems, through developing an explainable model who’s decisions can be verified and understood.
-\subsection{Objectives}
-The primary objectives I will follow this project are outlined as followed: 
+The use of IoMT systems continues to spread in the field of modern healthcare, with many routine health checks now able to be performed remotely and continuously. Unfortunately, with this increase of its use, there has also been an increase in the amount of cyber-attacks focused on healthcare services \cite{hipaajournal}. The main motivation of this project is to address the lack of trust that can be placed in Machine Learning based Intrusion Detection Systems, through developing an explainable model who’s decisions can be verified and understood.
+
+
+\subsection{Aims and Objectives}
+The overarching goal of this project is to design, implement and evaluate an XAI IDS model that produces accurate and reliable attack detection, specifically in a realistic IoMT environment.  
+\\
+The primary objectives of this project are: 
 \begin{itemize}
-    \item Review current literature on AI-based network attack detection within IoT and IoMT networks
-    \item Develop an accurate and interpretable attack detection model and select a suitable XAI technique
-    \item Evaluate the models performance using the CIC2024 IoMT dataset
-    \item Assess the models interpretability and its suitability for cybersecurity specifically to a healthcare context
+    \item Obtain and prepare the CIC2024 IoMT Dataset, ensuring it is ready for model training, including necessary preprocessing steps to address features of the dataset such as the class imbalance.
+    \item Design and implement the chosen Deep Learning IDS model, then train it using the now prepared dataset. Achieving satisfying evaluation metrics such as F1 score before integrating the explainable AI into the model.
+    \item Integrate XAI techniques into the model (LIME and SHAP), compare the performance of these techniques.
+    \item Evaluate the performance of the final model with XAI integrated using a variety of metrics. 
+    \item Measure, if any, the latency introduced by integrating XAI and discuss the trade off between explainability and performance of real-time attack detection.
 \end{itemize}
 
 \subsection{Gantt Chart Timeline}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1.0\linewidth]{images/ganttchart1.png}
+    \includegraphics[width=1.0\linewidth]{images/ganttchart2.png}
 \end{figure}
 
 \newpage

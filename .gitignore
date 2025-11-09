@@ -1,6 +1,5 @@
 .obsidian
 IoT
-*.png
 *.aux
 *.fdb_latexmk
 *.log
@@ -12,3 +11,5 @@ IoT
 lit_review_plan.md
 .~lock.Report draft.odt#
 .~lock.GanttChart.ods#
+.~lock.GanttChart2.ods#
+.~lock.GanttChart_New.ods#
