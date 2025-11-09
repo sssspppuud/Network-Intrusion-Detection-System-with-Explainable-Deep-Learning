@@ -141,10 +141,8 @@ The overarching goal of this project is to design, implement, and evaluate an XA
 The primary objectives of this project are: 
 \begin{itemize}
     \item Obtain and prepare the CIC2024 IoMT Dataset, ensuring it is ready for model training, including necessary preprocessing steps to address features of the dataset such as the class imbalance.
-    \item Design and implement the chosen Deep Learning IDS model, then train it using the now-prepared dataset. Achieving satisfying evaluation metrics, such as F1 score, before integrating the explainable AI into the model.
-    \item Integrate XAI techniques into the model (LIME and SHAP), compare the performance of these techniques.
-    \item Evaluate the performance of the final model with XAI integrated using a variety of metrics. 
-    \item Measure, if any, the latency introduced by integrating XAI and discuss the trade-off between explainability and performance of real-time attack detection.
+    \item Design and implement the chosen Deep Learning IDS model, then train it using the now prepared dataset. Achieving satisfying evaluation metrics such as F1 score, before integrating the explainable AI into the model.
+    \item Integrate XAI techniques into the model (LIME and SHAP), compare the performance of these techniques. Measure, if any, the latency introduced by integrating XAI and discuss the trade off between explainability and performance of real-time attack detection.
 \end{itemize}
 
 \subsection{Gantt Chart Timeline}
@@ -154,8 +152,26 @@ The primary objectives of this project are:
     \caption{Gantt Chart of the projects timeline}
 \end{figure}
 
+\subsection{Methodology and Implementation Plan}
+\subsubsection{Dataset}
+\begin{itemize}
+    \item The project will make use of the CIC2024 IoMT dataset, this is due to its focus on IoMT networks as well as its up-to-date nature, and the variety of IoMT relevant attack types it simulates.
+    \item Dataset cleaning will involve the removal of any redundant features in the dataset, and create some categorical encodings for malicious and benign traffic.
+    \item Address class imbalance, possibly using SMOTE to balance dataset, as the majority class by far in the dataset is DDoS and DoS attacks.
+    \item Split the dataset into subsets: training, validation, and testing. Ready for the models training and evaluation process.
+\end{itemize}
+
+\subsubsection{Model Design}
+A Deep Neural Network is chosen as the model to be implemented for this IDS, this is because it was among the strongest performers when tested on the chosen dataset \cite{dadkhah2024ciciomt2024}, achieving solid F1 scores in 2, 6 and 19 class classifications, narrowly being beaten by the RandomForest model. The validation set, reserved in the dataset preprocessing will be used for hyperparameter tuning, to maximise performance.
+
+\subsubsection{XAI Integration}
+To compare the interpretability and latency trade-off, both SHAP and LIME will be tested on the model. LIME and SHAP will be used to show which features were the most important when making a prediction. There will then be a comparison between the latency introduced by each method, as well as the consistency of the explanations they provide.
+
+\subsection{Evaluation and Success Criteria}
+
+
 \subsection{Risks and Ethical Considerations}
-The dataset that has been selected for this project does have a large class imbalance, with there being more data in the benign class of network traffic. This could lead to the model showing bias towards non-malicious network traffic, resulting in false negatives in attack detection, putting patient safety at risk. To combat this, the model could employ preprocessing techniques such as SMOTE (Synthetic Minority Over-sampling Technique) during training.
+The dataset that has been selected for this project does have a large class imbalance, with there being substantially more entries of DDoS and DoS network traffic compared to other attack types and benign traffic. This could lead to the model incorrectly classifying malicious network traffic as DDoS and DoS attacks resulting in inaccurate attack detection, putting patient safety at risk if medical systems are interrupted. To combat this, the model could employ preprocessing techniques such as SMOTE (Synthetic Minority Over-sampling Technique) during training.
 \\
 Sourcing of the data needed to train this model is also an ethical concern, due to the data transferred on IoMT networks potentially being sensitive and private to patients. The project’s use of the CIC2024 IoMT Dataset is an intentional answer to this concern, since it is a publicly available dataset that has been synthesised, there is no handling or storage of real patients’ data. 
 \newpage
