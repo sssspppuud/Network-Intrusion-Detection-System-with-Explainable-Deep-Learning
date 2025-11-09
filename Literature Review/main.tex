@@ -57,14 +57,13 @@
 \section*{Abstract}
 
 \noindent 
-The abstract should have 100-200 word.
-
+The Internet of Medical Things (IoMT) has become increasingly more integrated into healthcare delivery in recent years. Along with it’s many benefits in improving healthcare efficiency, it has also opened the medical industry to a wide variety of new cyberattacks, raising many concerns involving the privacy of patients data as well as their safety when receiving medical treatment. A common solution to this has been Machine Learning (ML) based Intrusion Detection Systems (IDS), which have provided high accuracy in classifying malicious network traffic in many IoT applications, and some IoMT scenarios. However, more complex ML based IDS are fundamentally less interpretable, this is an issue as it prevents trust from both patients and medical professionals. This project will address this critical gap through the design, implementation, and evaluation of a deep learning model incorporating Explainable Artificial Intelligence (XAI) that detects network attacks specific to an IoMT network.
 \vspace*{\fill}
 
-\begin{checkbox}
-    % \item {\bf I have not used any GenAI tools in preparing this assessment.}
-    \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
-\end{checkbox}
+% \begin{checkbox}
+%     % \item {\bf I have not used any GenAI tools in preparing this assessment.}
+%     \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
+% \end{checkbox}
 
 %  Uncomment to tick the decalaration
 % \begin{checkbox_t}
@@ -73,7 +72,7 @@ The abstract should have 100-200 word.
 % \end{checkbox_t}
 
 \vspace{1em}
-{\bf\noindent Signature:} \hrulefill
+% {\bf\noindent Signature:} \hrulefill
 
 \newpage
 % reset page number
@@ -91,8 +90,9 @@ Recent research has shown that Machine Learning (ML) can be effectively used to 
 This project seeks to design and implement an XAI model that can detect network attacks in an IoMT system, whilst maintaining interpretability in its detections. The proposed model will be trained and evaluated using the CIC2024 IoMT dataset, a publicly available dataset synthesised by the Canadian Institute for Cybersecurity \cite{dadkhah2024ciciomt2024}. This dataset has been specifically designed to develop and benchmark network attack detection models. It simulates a number of IoMT devices and a wide variety of both benign and malicious network traffic.
 \section{Literature Review}
 \subsection{IoMT Architecture and Security Concerns}
-IoT, and subsequently IoMT systems, are typically divided into three primary layers: perception, network, and applications. \cite{almulla2025layered}.In the perception layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
-The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. 
+IoT, and subsequently IoMT systems, are typically divided into three primary layers: perception, network, and applications \cite{almulla2025layered}.
+In the perception (physical) layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
+The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. The IDS discussed later in this literature review, as well as the IDS that will be developed in this project are primarily based on this network layer
 Moving to the application layer, we find software vulnerabilities where cyber threats, such as phishing and ransomware, can lead to interruptions in medical care and further data breaches. 
 \begin{figure}[H]
     \centering
@@ -116,7 +116,7 @@ In \cite{wang2020explainable}, researchers successfully introduced an explainabl
 A deep learning based IDS is proposed in \cite{SHARMA2024121751}, the authors integrate XAI models, including both LIME and SHAP. This paper evaluates the performance on both the NSL-KDD dataset as well as UNSW-NB15, demonstrating that XAI models make these deep learning models more transparent and trustworthy.
 There is limited work in applying XAI techniques specifically to IoMT scenarios, and the trade-off experienced between interpretabiltity and latency remains under-researched. Aiming to address this gap will allow the development of more trustworthy IDS models in healthcare settings that use IoMT networks.
 
-\subsection{Evalution Datasets and Benchmarks}
+\subsection{Evaluation Datasets and Benchmarks}
 The accuracy and reliability of Machine Learning (ML) based Intrusion Detection Systems (IDS) are primarily dependent on the quality and the realism of the data used to train, validate, and test the model. This is especially important in IoMT settings because the data transmitted in these networks are fundamentally more sensitive than a typical IoT network, making the need for secure communications essential. This section will critically evaluate the available datasets that have previously been used in ML-driven IDS models, discuss the limitations, and justify the selection of the CIC2024 IoMT Dataset for this projects specific focus.
 The dataset, NSL-KDD \cite{5356528}, frequently mentioned in the previous sections of this literature review, has been used extensively in training IDS models. This dataset was synthesised to improve upon its predecessor and has been able to produce promising results in many research application. However, this dataset has drawbacks such as its high redundancy of its records, which can lead to poor generalization in ML models \cite{revathi2013detailed}. This dataset would not be suitable for the model proposed in this report because it does not reflect an accurate IoMT system.
 Newer datasets provide significant improvements of NSL-KDD, one notable example is the CICIDS2017 dataset, this dataset includes more realistic network traffic in IoT networks. However, this would also not be suited to IoMT systems due to it not containing common examples of network traffic, such as lightweight protocols MQTT and Bluetooth, which are used by IoMT devices.
@@ -127,8 +127,7 @@ To maximise the realism of the data used to train the proposed model, this proje
     \caption{CICIoMT2024 topology. Source: \cite{dadkhah2024ciciomt2024}}
     \label{fig:CIC2024IoMT_Toplogy}
 \end{figure}
-The structure of the dataset will guide the development of this model. Due to the large class imbalance between benign and malicious network traffic, the evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision. 
-
+The structure of the dataset will guide the development of this model. Due to the large class imbalance where a large portion of the network traffic is of type DDoS, the evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision to ensure the model minimises false classifications.
 
 \section{Project Specification}
 \subsection{Motivation}
@@ -165,9 +164,13 @@ The primary objectives of this project are:
 A Deep Neural Network is chosen as the model to be implemented for this IDS, this is because it was among the strongest performers when tested on the chosen dataset \cite{dadkhah2024ciciomt2024}, achieving solid F1 scores in 2, 6 and 19 class classifications, narrowly being beaten by the RandomForest model. The validation set, reserved in the dataset preprocessing will be used for hyperparameter tuning, to maximise performance.
 
 \subsubsection{XAI Integration}
-To compare the interpretability and latency trade-off, both SHAP and LIME will be tested on the model. LIME and SHAP will be used to show which features were the most important when making a prediction. There will then be a comparison between the latency introduced by each method, as well as the consistency of the explanations they provide.
+To compare the interpretability and latency trade-off, both SHAP and LIME will be tested on the model. Both will be used to show which features were the most important when making a prediction. There will then be a comparison between the latency introduced by each method, as well as the consistency of the explanations they provide.
+
 
 \subsection{Evaluation and Success Criteria}
+IDS Model performance will be measured using F1-score, aiming to achieve a score greater than 0.85 is a reasonable target, this would indicate that the model strikes a strong balance between both precision and recall when detecting malicious network traffic.
+The benchmark for the proposed model will be based on existing results published on the paper for the CIC2024 IoMT Dataset, primarily the DNN mentioned and Random Forest model.
+To measure the success of the integration of XAI techniques (LIME and SHAP), there will be a comparison between the explanations provided by both methods to see if they both identify the same features across attacks. 
 
 
 \subsection{Risks and Ethical Considerations}
