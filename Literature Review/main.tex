@@ -154,9 +154,13 @@ The primary objectives of this project are:
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\linewidth]{images/ganttchart2.png}
+    \caption{Gantt Chart of the projects timeline}
 \end{figure}
 
-\newpage
+\subsection{Risks and Ethical Considerations}
+The dataset that has been selected for this project does have a large class imbalance, with there being more data in the benign class of network traffic. This could lead to the model showing bias towards non-malicious network traffic, resulting in false negatives in attack detection, putting patient safety at risk. To combat this, the model could employ preprocessing techniques such as SMOTE (Synthetic Minority Over-sampling Technique) during training.
+\\
+Sourcing of the data needed to train this model is also an ethical concern, due to the data transferred on IoMT networks potentially being sensitive and private to patients. The project’s use of the CIC2024 IoMT Dataset is an intentional answer to this concern, since it is a publicly available dataset that has been synthesised, there is no handling or storage of real patients’ data. \newpage
 \bibliographystyle{IEEEtran}
 \bibliography{main.bib}
 \end{document}
