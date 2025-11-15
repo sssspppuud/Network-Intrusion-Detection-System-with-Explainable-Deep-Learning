@@ -22,7 +22,14 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage[section]{placeins}
+
 \usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{tabularx}
+\renewcommand{\tabularxcolumn}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+
+
 % disable author name being replaced with underscores in bibtex
 % \usepackage[style=ieee,dashed=false]{biblatex}
 % unticked checkbox
@@ -95,33 +102,27 @@ To address the lack of interpretable ML models, this project will develop a Deep
 
 \section{Literature Review}
 In this literature, there will first be an analysis of the architecture of IoMT systems and the associated security concerns they face. Next, there will be an analysis of the existing research on Machine Learning based Intrusion detection systems, with focus on how different algorithms have been implemented and tested in IoT and some IoMT scenarios. Thirdly, it discusses the role of Explainable Artificial Intelligence in building trust in IDS, and further justifying the need for these techniques in IoMT environments. Finally, there will be a comparison and critical assessment of various available datasets for benchmarking IDS systems for IoMT. 
+
 \subsection{IoMT Architecture and Security Concerns}
 IoT, and subsequently IoMT systems, are typically divided into three primary layers: perception, network, and applications \cite{almulla2025layered}.
-
 In the perception (physical) layer, we have the actual medical sensors and wearable devices that collect information from patients, such as tracking cardiovascular and heart health, temperature, and sleep patterns. This layer faces potential vulnerabilities, with the potential for tampering and false data collection, which could ultimately lead to incorrect diagnoses based on incorrect data. 
-
 The network layer enables these devices to communicate with other devices in the IoMT network using protocols such as Wi-Fi and Bluetooth. This layer is susceptible to attacks such as DoS and DDoS, which can lead to disruptions in treatment and pose an immediate risk to patients' safety when IoMT devices are unable to operate. Man-in-the-middle attacks at this layer can also lead to data breaches, compromising the confidentiality of sensitive patient and medical staff data. The IDS discussed later in this literature review, as well as the IDS that will be developed in this project are primarily based on this network layer
-
 Moving to the application layer, we find software vulnerabilities where cyber threats, such as phishing and ransomware, can lead to interruptions in medical care and further data breaches. 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\linewidth]{images/iomt-architecture.jpg}
     \caption{Illustration of layers in an IoMT system. Source: \cite{purelogics}}
     \label{fig:IoMTLayers}
 \end{figure}
-
-Across these layers, there are three clear points of risk for IoMT technology: patients' data privacy, patients' safety, and disruption to medical systems. 
-
-The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to reduce the number of successful attacks. Effective Intrusion Detection System (IDS) is an essential tool for preventing the wide variety of attacks that can IoMT networks face.
-
+Across these layers, there are three clear points of risk for IoMT technology: patients' data privacy, patients' safety, and disruption to medical systems. The variety of areas that are vulnerable in these systems highlights the need for a more rigorous and trustworthy cybersecurity system to reduce the number of successful attacks. 
+Effective Intrusion Detection Systems (IDS) are an essential tool for preventing the wide variety of attacks that IoMT networks face. The majority of these attacks that are detected by IDS are found between the perception and data processing layer, where data such as readings are transferred over protocols like MQTT, Bluetooth and WiFi.
 
 \subsection{ML-Driven IDS}
 Traditional Intrusion Detection Systems (IDS) such as signature based methods are not well-suited to the field of IoT networks due to various unknown attack types, this has lead to research in recent years primarily being focused on hybrid Machine Learning (ML) methods for detecting network attacks, including Random Forest and SVM \cite{da2019internet}. 
 These ML-based systems aim to analyse large amounts of network traffic and distinguish between benign and malicious activity. 
 This section will focus on reviewing the most well-documented models used and how their performance is evaluated in various IDS. Continuing with the shift toward ML-driven IDS approaches, early ML based IDS explored the efficacy of algorithms such as Decision Trees and SVMs, both of which achieve promising results when tested on benchmark datasets. For example one IDS uses a Hybrid Decision Tree tested and evaluated on the NSL-KDD dataset \cite{kddanalysis} achieves 83\% accuracy and 0.83 F1 score, outperforming other ML methods such as SVM and KNN \cite{taghavinejad2020intrusion}. However, this model does not distinguish between attack types such as DoS, MITM, and others, which is desirable for IoMT security; the authors suggest future work to address this limitation. 
-Deep learning methods provide a solution to this, a deep reinforcement learning model was developed and tested alongside traditional ML methods to detect malicious network traffic in IoT networks. Using the NSL-KDD dataset \cite{kddanalysis}, the best performing model was the Double Deep Q-Network (DDQN) achieving an accuracy of around 80\% and F1 score of 0.91\cite{lopez2020application}. Comparing this with the Hybrid Decision Tree, it is clear that this form of deep reinforcement learning excels in attack detection. A noticeable drawback of deep learning here is the time taken to train the model compared to traditional ML as well as the lack of interpretability it provides. 
-In \cite{kulshresthap}, an ML IDS which is specific to IoMT is presented. Using the ToN\_IoT Network dataset, the authors carried out comparisons between eleven different attack classification model. The most effective classifier was found to be Adaptive Boosting ensemble technique, achieving an accuracy of 99.18\%. However, one potential gap in the implementation of this model is the dataset used, it has not been specifically created to reflect IoMT networks, rather more general IoT networks. This could cause the model to face challenges in a real world IoMT environment, where IoMT devices make use of specific lightweight protocols such as Bluetooth and MQTT.
+Deep learning methods provide a solution to this, a deep reinforcement learning model was developed and tested alongside traditional ML methods to detect malicious network traffic in IoT networks. Using the NSL-KDD dataset \cite{kddanalysis}, the best performing model was the Double Deep Q-Network (DDQN) achieving an accuracy of around 80\% and F1 score of 0.91\cite{lopez2020application}., Comparing this with the Hybrid Decision Tree, it is clear that this form of deep reinforcement learning excels in attack detection, the slightly lower accuracy is acceptable as the DDQN model has potential for multi-class detection. A noticeable drawback of deep learning here is the time taken to train the model compared to traditional ML as well as the lack of interpretability it provides. 
+In \cite{kulshresthap}, an ML IDS geared towards IoMT environments is presented. Using the ToN\_IoT Network dataset, the authors carried out comparisons between eleven different attack classification models. The most effective classifier was found to be Adaptive Boosting ensemble technique, achieving an accuracy of 99.18\%. However, one potential gap in the implementation of this model is the dataset used, it has not been specifically created to reflect IoMT networks, rather more general IoT networks. This could cause the model to face challenges in a real world IoMT environment, where IoMT devices make use of specific lightweight protocols such as Bluetooth and MQTT.
 
 \subsection{Explainable Artificial Intelligence (XAI) in IDS}
 Explainable Artificial Intelligence (XAI) refers to a set of tools which aim to make the predictions made by a deep learning model understandable to humans, this is in the form of showing the features the model decides played the biggest role in making the final prediction. Obviously, in a healthcare setting, the ability to trust is essential with the IDS system securing an IoMT network because we do not want to risk genuine medical communications being interrupted, which could lead to disruptions to patients treatment. However, we still want to accurately prevent malicious attacks that could cause reduced patient safety and sensitive medical data being compromised. Therefore, integrating XAI into a deep learning IDS allows the healthcare industry to understand and validate a the predictions of the model.
@@ -160,28 +161,51 @@ The primary objectives of this project are:
     \item Integrate XAI techniques into the model (LIME and SHAP), then conduct analysis on the output of both methods to determine if they methods consistently flag the same features as the most crucial for predicting a given attack type. The robustness of the explainable elements can also be validated against the known characteristics of certain attacks. 
 \end{itemize}
 
-\subsection{Gantt Chart Timeline}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{images/ganttchart2.png}
-    \caption{Gantt Chart of the projects timeline}
-\end{figure}
+\begin{table}[h!]
+\centering
+\begin{tabularx}{\linewidth}{|X|X|X|}
+\hline
+\textbf{Task} & \textbf{Deliverable} & \textbf{Milestone} \\ \hline
+
+Prepare Dataset 
+& Preprocessed and Balanced CIC2024IoMT Dataset: The dataset is cleaned, class imbalance has been addressed, features have been encoded, split into training, validation and testing sets.
+& Dataset readiness: Features are correctly encoded and classes are balanced, ready for model training. \\ 
+\hline
+
+DNN IDS Model Implementation
+& Tuned Deep Neural Network: Model Architecture has been fully implemented and hyperparameters have been tuned.
+& IDS Performance Goal reached: The IDS achieves an F1 score of at least (or as close as possible) 0.8 after tuning hyperparameters. \\
+\hline
+
+Integrate XAI Techniques to Interpret DNN
+& SHAP and LIME implemented to work on the DNN's classification of various data points.
+& Successfully obtained several feature explanations using both LIME and SHAP, confirming the the XAI methods are working. \\
+\hline
+
+Validate Interpretability of XAI techniques
+& Analysis of the output from SHAP and LIME, validating whether they identify correct features consistent with certain attacks. Discuss any differences in explanations between both techniques.
+& XAI techniques successfully identify majority of features associated with attacks.\\
+\hline
+
+\end{tabularx}
+\caption{Project Objectives}
+\end{table}
 
 \subsection{Methodology and Implementation Plan}
 \subsubsection{Dataset}
 \begin{itemize}
     \item The project will make use of the CIC2024 IoMT dataset, this is due to its focus on IoMT networks as well as its up-to-date nature, and the variety of IoMT relevant attack types it simulates.
-    \item Dataset cleaning will involve the removal of any redundant features in the dataset, and create some categorical encodings for malicious and benign traffic.
+    \item Dataset cleaning will involve the removal of any redundant features in the dataset, and create some categorical encodings for each of the different attack types.
     \item Address class imbalance, possibly using SMOTE to balance dataset, as the majority class by far in the dataset is DDoS and DoS attacks.
     \item Split the dataset into subsets: training, validation, and testing. Ready for the models training and evaluation process.
 \end{itemize}
 
 \subsubsection{Model Design}
-A Deep Neural Network is chosen as the model to be implemented for this IDS, this is because it was among the strongest performers when tested on the chosen dataset \cite{dadkhah2024ciciomt2024}, achieving solid F1 scores in 2, 6 and 19 class classifications, narrowly being beaten by the RandomForest model. The validation set, reserved in the dataset preprocessing will be used for hyperparameter tuning, to maximise performance.
+A Deep Neural Network is the model type that will be implemented in this IDS, this is because it was among the strongest performers when tested on the chosen dataset \cite{dadkhah2024ciciomt2024}, achieving solid F1 scores in 2, 6 and 19 class classifications, narrowly being beaten by the RandomForest model. The XAI part of the project will address the lack of interpretability, which limits deep learning models in IDS.
+The validation set, reserved during preprocessing will be used for hyperparameter tuning, to maximise performance measured primarily by F1 score, among other metrics like accuracy, precision and recall.
 
 \subsubsection{XAI Integration}
-To compare the  both SHAP and LIME will be tested on the model. Both will be used to show which features were the most important when making a prediction.
-
+Both SHAP and LIME will be implemented and tested on the models classifications of network attacks. Both methods will be used to show which features were the most important when making a prediction, and will be validated by checking if these features are logical to the attack classification they are explaining, such as DoS attacks.
 \subsection{Evaluation and Success Criteria}
 IDS Model performance will be measured using F1-score, aiming to achieve a score greater than 0.85 is a reasonable target, this would indicate that the model strikes a strong balance between both precision and recall when detecting malicious network traffic.
 The benchmark for the proposed model will be based on existing results published on the paper for the CIC2024 IoMT Dataset, primarily the DNN mentioned and Random Forest model.
