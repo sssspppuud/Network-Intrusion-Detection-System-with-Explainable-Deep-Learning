@@ -113,7 +113,7 @@ Moving to the application layer, we find software vulnerabilities where cyber th
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{images/iomt-architecture.jpg}
+    \includegraphics[width=0.7\linewidth]{images/iomt-architecture.jpg}
     \caption{Illustration of layers in an IoMT system. Source: \cite{purelogics}}
     \label{fig:IoMTLayers}
 \end{figure}
@@ -143,14 +143,20 @@ There is limited work in applying XAI techniques specifically to IoMT scenarios;
 The accuracy and reliability of Machine Learning (ML) based Intrusion Detection Systems (IDS) are primarily dependent on the quality and the realism of the data used to train, validate, and test the model. This is especially important in IoMT settings because the data transmitted in these networks are fundamentally more sensitive than a typical IoT network, making the need for secure communications essential. This section will critically evaluate the available datasets that have previously been used in ML-driven IDS models, discuss the limitations, and justify the selection of the CIC2024 IoMT Dataset for this projects specific focus.
 The dataset, NSL-KDD \cite{nslkdddataset}, frequently mentioned in the previous sections of this literature review, has been used extensively in training IDS models. This dataset was synthesised to improve upon its predecessor (KDD’99) \cite{kddanalysis} and has been able to produce promising results in many research applications. However, this dataset has drawbacks such as its high redundancy of its records, which can lead to poor generalization in ML models \cite{revathi2013detailed}. This dataset would not be suitable for the model proposed in this report because it does not reflect attacks faced in an IoMT system, and does not feature more modern attack types.
 Newer datasets provide significant improvements of NSL-KDD, one notable example is the CICIDS2017 dataset \cite{cicids2017dataset}, this dataset includes more up-to-date and realistic network traffic found in IoT networks. However, this would also not be suited to IoMT systems due to it not containing common examples of network traffic, such as lightweight protocols MQTT and Bluetooth, which are used by IoMT devices. 
-To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset \cite{cic2024iomtdataset}. This dataset was specifically designed for developing and benchmarking network security systems for IoMT networks, containing 18 different attack types targetted at 40 IoMT devices \cite{dadkhah2024ciciomt2024}. It includes traffic types missing from the previously mentioned datasets including common protocols used by IoMT such as MQTT and Bluetooth. This dataset provides a wide variety of up-to-date and relevant attack vectors faced by real-world IoMT devices. The devices in the dataset can be seen in Figure \ref{fig:CIC2024IoMT_Toplogy}
+To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset \cite{cic2024iomtdataset}. This dataset was specifically designed for developing and benchmarking network security systems for IoMT networks, containing 18 different attack types targetted at 40 IoMT devices \cite{dadkhah2024ciciomt2024}. It includes traffic types missing from the previously mentioned datasets including common protocols used by IoMT such as MQTT and Bluetooth. This dataset provides a wide variety of up-to-date and relevant attack vectors faced by real-world IoMT devices. The devices which data has been collected from can be seen in Figure \ref{fig:CIC2024IoMT_Toplogy}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{images/inline-topology.jpg}
+    \includegraphics[width=0.7\linewidth]{images/inline-topology.jpg}
     \caption{CICIoMT2024 topology. Source: \cite{dadkhah2024ciciomt2024}}
     \label{fig:CIC2024IoMT_Toplogy}
 \end{figure}
-The structure of the dataset will guide the development of this model. Due to the large class imbalance where a large portion of the network traffic is of type DDoS, the evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision to ensure the model minimises incorrect classifications.
+The structure of the dataset will guide the development of this model. Due to the large class imbalance, where a large portion of the malicious traffic is of type DDoS, the evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision to ensure the model minimises incorrect classifications of attack types. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/multiclass_dist.jpg}
+    \caption{Distribution of multi-class attack data. Source: \cite{cic2024iomtdataset}}
+    \label{fig:CIC2024IoMT_Distribution}
+\end{figure}
 
 
 \section{Project Specification}
