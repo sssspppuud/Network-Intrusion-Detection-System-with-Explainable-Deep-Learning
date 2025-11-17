@@ -95,6 +95,7 @@ The Internet of Medical Things (IoMT) has become increasingly more integrated in
 Smart and connected medical devices are increasingly integrated into the delivery of healthcare services, leading to the development of the Internet of Medical Things (IoMT), a subset of the Internet of Things (IoT) encompassing medical equipment and devices such as heart rate and cardiovascular monitoring, remote medicine alert systems, and temperature tracking. 
 IoMT technology offers many advantages by enabling continuous monitoring of patients’ health. This assists healthcare professionals in making remote diagnoses and better informing their clinical decisions; for example, data collected from IoMT devices has been used to predict patients’ risk of heart disease \cite{baseer2024healthcare}. With the growing digitalisation of healthcare systems, there has been a significant increase in cyberattacks targeting medical infrastructure. 
 According to the HIPAA Journals’ report, there have been 546 healthcare breaches that affect more than 500 people so far in 2025 \cite{hipaajournal}. This, coupled with the sensitive nature of medical data, raises major concerns about patients’ privacy, where patients’ personal data may be exposed, as well as potential concerns about patients’ safety, given that IoMT devices are used to deliver treatments. 
+\\
 Recent research has shown that Machine Learning (ML) can be effectively used to detect network attacks by analysing network traffic \cite{althubitiids, agarapneuralids, pramilaraniforest}. 
 Compared to traditional network attack detection methods, such as signature-based systems, ML techniques offer significant improvements in detecting unknown attack types, this is because they are able to recognise complex patterns in network traffic attributed to malicious activity \cite{fidelisecurity}.
 However, one problem faced by complex ML techniques is their lack of interpretability in decision-making; in the context of healthcare systems, this interpretability is crucial, as medical staff and patients need to trust that IoMT networks are secure. 
@@ -111,7 +112,7 @@ Moving to the cloud (application) layer, we find software vulnerabilities where 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{images/iomt-architecture.jpg}
+    \includegraphics[width=0.8\linewidth]{images/iomt-architecture.jpg}
     \caption{Illustration of layers in an IoMT system. Source: \cite{razdan04072022}}
     \label{fig:IoMTLayers}
 \end{figure}
@@ -123,7 +124,7 @@ Effective Intrusion Detection Systems (IDS) are an essential tool for preventing
 Traditional Intrusion Detection Systems (IDS), such as signature-based methods, are not well-suited to the field of IoT networks due to various unknown attack types. This has lead to research in recent years primarily being focused on hybrid Machine Learning (ML) methods for detecting network attacks, including Random Forest and SVM \cite{da2019internet}.
 These ML-based systems aim to analyse large amounts of network traffic and distinguish between benign and malicious activity. 
 This section will focus on reviewing the most well-documented models used and how their performance is evaluated in various IDS. Continuing with the shift toward ML-driven IDS approaches, early ML-based IDS explored the efficacy of algorithms such as Decision Trees and SVMs, both of which achieve promising results when tested on benchmark datasets. For example, an IDS using a Hybrid Decision Tree was tested and evaluated on the NSL-KDD dataset \cite{nslkdddataset}, it achieved 83\% accuracy and an F score of 83, outperforming other ML methods such as SVM and KNN \cite{taghavinejad2020intrusion}. However, this model does not distinguish between attack types such as DoS, MITM, and others, which is desirable for IoMT security; the authors suggest future work to address this limitation. 
-
+\\
 Deep learning methods provide a solution to this; a deep reinforcement learning model was developed and tested alongside traditional ML methods to detect malicious network traffic in IoT networks. Using the NSL-KDD dataset \cite{nslkdddataset}, the best performing model was the Double Deep Q-Network (DDQN), achieving an accuracy of around 80\% and an F1 score of 0.91 \cite{lopez2020application}, Comparing this with the Hybrid Decision Tree, it is clear that this form of deep reinforcement learning excels in attack detection; the slightly lower accuracy is acceptable as the DDQN model has potential for multi-class detection. A noticeable drawback of deep learning here is the time taken to train the model compared to traditional ML, as well as the lack of interpretability it provides. 
 In \cite{kulshresthap}, an ML IDS geared towards IoMT environments is presented. Using the ToN\_IoT Network dataset \cite{toniotdataset}, the authors carried out comparisons between eleven different attack classification models. The most effective classifier was found to be the Adaptive Boosting ensemble technique, achieving an accuracy of 99.18\%. However, one potential gap in the implementation of this model is the dataset used; it has not been specifically created to reflect IoMT networks, but rather more general IoT networks. This could cause the model to face challenges in a real world IoMT environment, where IoMT devices make use of specific lightweight protocols such as Bluetooth, MQTT and Wi-Fi.
 
@@ -133,9 +134,11 @@ Explainable Artificial Intelligence (XAI) refers to a set of tools that aim to m
 Obviously, in a healthcare setting, healthcare professionals and patients must be able to trust that the IoMT network is being kept secure by an IDS. 
 This requires that the IDS prevents malicious network traffic from entering the network, whilst ensuring genuine medical communications and benign traffic are not intercepted; false alarms could lead to disruptions to patients’ treatment. 
 However, we still want to accurately prevent malicious attacks that could cause reduced patient safety and sensitive medical data being compromised. Therefore, integrating XAI into a deep learning IDS allows the healthcare industry to understand and validate the classification made by the system.
+\\
 The two main types of XAI models are model-specific and model-agnostic. Model-specific XAI is suited to a specific group of models, meaning they offer a deep insight into the model's decision-making; however they cannot be applied to a wide variety of model types. Model agnostic techniques are the opposite, as they can be applied to many model types with less in-depth insight \cite{devireddy2025comparative}.
 Two popular examples of XAI techniques are LIME and SHAP. LIME (Local Interpretable Mode-agnostic Explanations) is a model-agnostic XAI algorithm proposed in 2016, it explains the prediction of a classifier though approximating it with a simpler and interpretable model \cite{ribeiro2016should}. Later, SHAP (Shapley Additive exPlanations) was introduced in 2017 \cite{lundberg2017unified}, similar to LIME, it is a model-agnostic algorithm that determines how each feature contributes to a models output. 
 SHAP can be computationally costly when the model it is applied to is very complex and has a large number of features. The explanations provided by LIME can differ even when the instances are similar, this is due to the random nature of it sampling, leading to less reliable results.
+\\
 Recent studies and research demonstrate that XAI models, such as LIME and SHAP, are effective in explaining predictions made by IDS systems. In \cite{wang2020explainable}, researchers successfully introduced an explainable machine learning framework for IDS. This framework was built using SHAP and used the NSL-KDD dataset \cite{nslkdddataset} to evaluate the model’s performance. However, this paper mentions the framework’s limitations and highlights the need for more datasets to be tested to improve the explainability. 
 A deep learning based IDS is proposed in \cite{sharmaxai2024}, in which the authors integrate XAI methods, including both LIME and SHAP. This paper evaluates the performance on both the NSL-KDD dataset as well as the UNSW-NB15 datasets \cite{nslkdddataset, unswbn15dataset}, demonstrating that integrating XAI techniques into these models makes them more transparent and trustworthy.
 There is limited work in applying XAI techniques specifically to IoMT scenarios; addressing this gap will allow the development of more trustworthy IDS models in healthcare settings that use IoMT networks.
@@ -147,15 +150,15 @@ Newer datasets provide significant improvements of NSL-KDD, one notable example 
 To maximise the realism of the data used to train the proposed model, this project will use the CIC2024 IoMT Dataset \cite{cic2024iomtdataset}. This dataset was specifically designed for developing and benchmarking network security systems for IoMT networks, containing 18 different attack types targetted at 40 different IoMT devices \cite{dadkhah2024ciciomt2024}. It includes traffic types missing from the previously mentioned datasets including common protocols used by IoMT devices, such as MQTT and Bluetooth. This dataset provides a wide variety of up-to-date and relevant attack vectors faced by real-world IoMT devices. The devices which data has been collected from can be seen in Figure \ref{fig:CIC2024IoMT_Toplogy}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{images/inline-topology.jpg}
+    \includegraphics[width=0.7\linewidth]{images/inline-topology.jpg}
     \caption{CICIoMT2024 topology. Source: \cite{dadkhah2024ciciomt2024}}
     \label{fig:CIC2024IoMT_Toplogy}
 \end{figure}
 The structure of the dataset will guide the development of this model. Due to the large class imbalance, where a large portion of the malicious traffic is of type DDoS, as can be seen in Fig. \ref{fig:CIC2024IoMT_Distribution}. The evaluation of the model will need to incorporate various metrics such as F1-score, Recall, and Precision to ensure the model minimises incorrect classifications of attack types. 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\linewidth]{images/multiclass_dist.jpg}
-    \caption{Distribution of multi-class attack data. Source: \cite{cic2024iomtdataset}}
+    \includegraphics[width=0.7\linewidth]{images/multiclass_dist.jpg}
+    \caption{Distribution of multi-class attack data in the CIC2024IoMT dataset. Source: \cite{cic2024iomtdataset}}
     \label{fig:CIC2024IoMT_Distribution}
 \end{figure}
 
@@ -163,8 +166,9 @@ The structure of the dataset will guide the development of this model. Due to th
 \subsection{Motivation}
 The use of IoMT systems continues to spread in the field of modern healthcare, with many routine health checks now able to be performed remotely and continuously. Unfortunately, with this increase of its use, there has also been an increase in the amount of cyber-attacks focused on healthcare services \cite{hipaajournal}. 
 Current ML-based Intrusion Detect Systems show great promise in identifying and classifying malicious network traffic, however they still face various challenges. One criticism of some of these ML-based IDS, is the mysterious nature of the classifications more complex models make, this makes the reasons behind specific classifications both less interpretable and less transparent. The lack of transparency hinders their adoption into automated and safety critical environments such as healthcare, because it is difficult for healthcare professionals to understand and trust alerts given by the system.
+\\
 The primary motivation of this project is to address this lack of transparency by first developing a Deep Learning based IDS, specific to IoMT environments, which performs to a high standard. Once this has been tested and its performance evaluated, XAI techniques will then be applied to enhance the reliability of the model, this allows users of the IDS to trust the models classifications more.
-Overall, this project looks to contribute a more trustworthy and transparent IDS for IoMT environments, ensuring that healthcare is delivered safely.
+Overall, this project seeks to contribute a more trustworthy and transparent IDS for IoMT environments, ensuring that healthcare is delivered safely.
 
 
 \subsection{Aims and Objectives}
@@ -172,7 +176,7 @@ The overarching goal of this project is to design, implement, and evaluate a rel
 \\
 The primary objectives of this project are: 
 \begin{itemize}
-    \item Obtain and prepare the CIC2024 IoMT Dataset, ensuring it is ready for model training, including necessary preprocessing steps to address features of the dataset such as the class imbalance \ref{fig:CIC2024IoMT_Distribution}
+    \item Obtain and prepare the CIC2024 IoMT Dataset, ensuring it is ready for model training, including necessary preprocessing steps to address features of the dataset such as the class imbalance seen in Fig. \ref{fig:CIC2024IoMT_Distribution}.
     \item Design and implement the Deep Neural Network for the IDS model, then train it using the now prepared dataset, using the validation set to tune hyperparameters. Ensuring that it achieves satisfying evaluation metrics, such as F1 score, before integrating the explainable AI into the model.
     \item Integrate XAI techniques into the model (LIME and SHAP), then conduct analysis on the output of both methods to determine if the methods consistently flag the same features as the most crucial for predicting a given attack type. The robustness of the explainable elements can also be validated against the known characteristics of certain attacks. 
 \end{itemize}
@@ -238,6 +242,7 @@ To measure the success of the integration of XAI techniques (LIME and SHAP), the
 
 \subsection{Risks and Ethical Considerations}
 The dataset that has been selected for this project does have a large class imbalance, with there being substantially more entries of DDoS and DoS network traffic compared to other attack types and benign traffic. This could lead to the model incorrectly classifying malicious network traffic as DDoS and DoS attacks, resulting in inaccurate attack detection, putting patient safety at risk if medical systems are interrupted. To combat this, the model could employ preprocessing techniques such as SMOTE (Synthetic Minority Over-sampling Technique) during training.
+\\
 Sourcing of the data needed to train this model is also an ethical concern, due to the data transferred on IoMT networks potentially being sensitive and private to patients. The project’s use of the CIC2024 IoMT Dataset is an intentional answer to this concern, since it is a publicly available dataset that has been synthesised, and there is no handling or storage of real patients’ data.
 
 \newpage
