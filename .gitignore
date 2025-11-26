@@ -14,5 +14,6 @@ lit_review_plan.md
 .~lock.GanttChart2.ods#
 .~lock.GanttChart_New.ods#
 draft_word.docx
-.env
+.venv
 CICIoMT2024
+.vscode
