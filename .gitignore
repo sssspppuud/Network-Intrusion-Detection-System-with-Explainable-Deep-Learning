@@ -17,6 +17,9 @@ draft_word.docx
 .venv
 CICIoMT2024
 .vscode
-*.png
+
 .gitignore
 table.html
+data
+datasets
+Figures

@@ -18,74 +18,101 @@ def load_dataset(root: str, subset: str) -> pd.DataFrame:
 
     for filename in files:
         try:
+            label, category, attack = None, None, None
+
             file_path = os.path.join(subset_path, filename)
             df = pd.read_csv(file_path)
 
             cleaned_filename = filename.replace(".pcap.csv", "")  # Remove extension
-            if cleaned_filename[:-1].isdigit():
+            if cleaned_filename[-1].isdigit():
                 # Remove number from end of filename
                 cleaned_filename = cleaned_filename[:-1]
 
             if "Benign" in cleaned_filename:
+                label = "Benign"
                 category = "Benign"
                 attack = "Benign"
+
             elif "ARP_Spoofing" in cleaned_filename:
+                label = "Attack"
                 category = "Spoofing"
-                attack = "Spoofing"
-            elif "MQTT-DDoS-Connect-Flood" in filename:
-                category = "MQTT"
-                attack = "MQTT-DDoS-Connect-Flood"
-            elif "MQTT-DDoS-Publish-Flood" in filename:
-                category = "MQTT"
-                attack = "MQTT-DDoS-Publish-Flood"
-            elif "MQTT-DoS-Connect-Flood" in filename:
-                category = "MQTT"
-                attack = "MQTT-DoS-Connect-Flood"
-            elif "MQTT-DoS-Publish-Flood" in filename:
-                category = "MQTT"
-                attack = "MQTT-DoS-Publish-Flood"
-            elif "MQTT-Malformed_Data" in filename:
-                category = "MQTT"
-                attack = "MQTT-Malformed_Data"
-            elif "Recon-OS_Scan" in filename:
-                category = "Recon"
-                attack = "Recon-OS_Scan"
+                attack = "ARP Spoofing"
+
             elif "Recon-Ping_Sweep" in filename:
+                label = "Attack"
                 category = "Recon"
-                attack = "Recon-Ping_Sweep"
-            elif "Recon-Port_Scan" in filename:
-                category = "Recon"
-                attack = "Recon-Port_Scan"
+                attack = "Ping Sweep"
             elif "Recon-VulScan" in filename:
+                label = "Attack"
                 category = "Recon"
-                attack = "Recon-VulScan"
-            elif "TCP_IP-DDoS-ICMP" in filename:
-                category = "DDoS"
-                attack = "DDoS-ICMP"
-            elif "TCP_IP-DDoS-SYN" in filename:
-                category = "DDoS"
-                attack = "DDoS-SYN"
-            elif "TCP_IP-DDoS-TCP" in filename:
-                category = "DDoS"
-                attack = "DDoS-TCP"
-            elif "TCP_IP-DDoS-UDP" in filename:
-                category = "DDoS"
-                attack = "DDoS-UDP"
-            elif "TCP_IP-DoS-ICMP" in filename:
-                category = "DoS"
-                attack = "DoS-ICMP"
-            elif "TCP_IP-DoS-SYN" in filename:
-                category = "DoS"
-                attack = "DoS-SYN"
+                attack = "VulScan"
+            elif "Recon-OS_Scan" in filename:
+                label = "Attack"
+                category = "Recon"
+                attack = "OS Scan"
+            elif "Recon-Port_Scan" in filename:
+                label = "Attack"
+                category = "Recon"
+                attack = "Port Scan"
+
+            elif "MQTT-Malformed_Data" in filename:
+                label = "Attack"
+                category = "MQTT"
+                attack = "Malformed Data"
+            elif "MQTT-DoS-Connect_Flood" in filename:
+                label = "Attack"
+                category = "MQTT"
+                attack = "DoS Connect Flood"
+            elif "MQTT-DDoS-Publish_Flood" in filename:
+                label = "Attack"
+                category = "MQTT"
+                attack = "Publish Flood"
+            elif "MQTT-DoS-Publish_Flood" in filename:
+                label = "Attack"
+                category = "MQTT"
+                attack = "Publish Flood"
+            elif "MQTT-DDoS-Connect_Flood" in filename:
+                label = "Attack"
+                category = "MQTT"
+                attack = "Connect Flood"
+
             elif "TCP_IP-DoS-TCP" in filename:
+                label = "Attack"
                 category = "DoS"
-                attack = "DoS-TCP"
+                attack = "DoS TCP"
+            elif "TCP_IP-DoS-ICMP" in filename:
+                label = "Attack"
+                category = "DoS"
+                attack = "DoS ICMP"
+            elif "TCP_IP-DoS-SYN" in filename:
+                label = "Attack"
+                category = "DoS"
+                attack = "DoS SYN"
             elif "TCP_IP-DoS-UDP" in filename:
+                label = "Attack"
                 category = "DoS"
-                attack = "DoS-UDP"
+                attack = "DoS UDP"
+
+            elif "TCP_IP-DDoS-SYN" in filename:
+                label = "Attack"
+                category = "DDoS"
+                attack = "DDoS SYN"
+            elif "TCP_IP-DDoS-TCP" in filename:
+                label = "Attack"
+                category = "DDoS"
+                attack = "DDoS TCP"
+            elif "TCP_IP-DDoS-ICMP" in filename:
+                label = "Attack"
+                category = "DDoS"
+                attack = "DDoS ICMP"
+            elif "TCP_IP-DDoS-UDP" in filename:
+                label = "Attack"
+                category = "DDoS"
+                attack = "DDoS UDP"
 
             df["Attack"] = attack
             df["Category"] = category
+            df["Class"] = label
 
             dfs.append(df)
 
@@ -99,45 +126,54 @@ def load_dataset(root: str, subset: str) -> pd.DataFrame:
     return pd.concat(dfs, ignore_index=True)
 
 
-train = load_dataset("CICIoMT2024", "train")
-test = load_dataset("CICIoMT2024", "test")
-dataset = pd.concat(
+train = load_dataset("data", "train")
+test = load_dataset("data", "test")
+df = pd.concat(
     [train, test], ignore_index=True
 )  # Combining train and test sets to analyse full dataset
 
-# Visualising Dataset:
+print(df[["Category", "Attack", "Class"]].value_counts())
 
+# Visualising  the Dataset:
 sns.set_theme(style="whitegrid", context="paper", palette="viridis")
 FIGURES_DIR = "./Figures"
 
-# Distribution of Attack Types Bar chart
+# DDoS and DoS plot
+ddos_count = len(df[df["Category"] == "DDoS"])
+dos_count = len(df[df["Category"] == "DoS"])
+plot_data = pd.DataFrame(
+    {"Attack Type": ["DDoS", "DoS"], "Count": [ddos_count, dos_count]}
+).sort_values(by="Count", ascending=True)
 
-attack_counts = dataset["Attack"].value_counts()
-attack_counts = attack_counts.iloc[::-1]  # Reverse order
+plt.figure(figsize=(12, 6))
+sns.barplot(x="Attack Type", y="Count", data=plot_data)
+plt.ticklabel_format(style="plain", axis="y")
+plt.title("Count of DDoS vs. DoS Traffic")
+plt.ylabel("Count")
+plt.savefig(f"{FIGURES_DIR}/DDoS_DoS_Plot.png", dpi=600)
 
-plt.figure(figsize=(14, 6))
+# Attack distribution
+attack_counts = df["Attack"].value_counts().sort_values(ascending=True)
+plt.figure(figsize=(12, 6))
 sns.barplot(x=attack_counts.index, y=attack_counts.values)
-plt.title("Distribution of Attack Types")
-plt.xlabel("Attack Type")
+plt.ticklabel_format(style="plain", axis="y")
+plt.title("Distribution of Attacks")
+plt.xlabel("Attack Name")
 plt.ylabel("Count")
 plt.xticks(rotation=45, ha="right")
-plt.tight_layout()
 plt.savefig(f"{FIGURES_DIR}/AttackDistribution.png", dpi=600)
 
-# Distribution of Attack Categories Bar chart (excluding ddos and dos)
-category_counts = dataset[~dataset["Attack"].str.startswith(("DDoS", "DoS"))][
-    "Attack"
-].value_counts()
-category_counts = category_counts.iloc[::-1]
-plt.figure(figsize=(10, 6))
+# Attack categories
+filtered_df = df[df["Category"].isin(["MQTT", "Spoofing", "Recon", "Benign"])]
+category_counts = filtered_df["Category"].value_counts().sort_values(ascending=True)
+plt.figure(figsize=(12, 6))
 sns.barplot(x=category_counts.index, y=category_counts.values)
+plt.ticklabel_format(style="plain", axis="y")
 plt.title("Distribution of Attack Categories")
-plt.xlabel("Attack Category")
+plt.xlabel("Category")
 plt.ylabel("Count")
 plt.xticks(rotation=45, ha="right")
-plt.tight_layout()
 plt.savefig(f"{FIGURES_DIR}/AttackCategoryDistribution.png", dpi=600)
-
 
 """
 dataset.shape = (9162994, 41) dataset.columns = Index(['Header_Length', 'Protocol Type', 'Time_To_Live', 'Rate', 'fin_flag_number', 'syn_flag_number', 'rst_flag_number', 'psh_flag_number', 'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'ack_count', 'syn_count', 'fin_count', 'rst_count', 'HTTP', 'HTTPS', 'DNS', 'Telnet', 'SMTP', 'SSH', 'IRC', 'TCP', 'UDP', 'DHCP', 'ARP', 'ICMP', 'IGMP', 'IPv', 'LLC', 'Tot sum', 'Min', 'Max', 'AVG', 'Std', 'Tot size', 'IAT', 'Number', 'Variance', 'Category', 'Attack'], dtype='object')
