@@ -3,3 +3,5 @@ matplotlib
 seaborn
 numpy
 scikit-learn
+fastparquet
+pyarrow

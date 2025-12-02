@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import os
 import pandas as pd
 import seaborn as sns
@@ -6,14 +7,14 @@ import seaborn as sns
 
 def save_figure(fig, save_path: str | None):
     if save_path:
+        plt.figure(fig.number)
+        plt.tight_layout()
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        fig.savefig(save_path, dpi=600)
+        fig.savefig(save_path, dpi=300)
     plt.close(fig)
 
 
 def plot_attack_distribution_bar(df: pd.DataFrame, save_path: str | None = None):
-    sns.set_theme(style="whitegrid", context="paper", palette="viridis")
-
     attack_counts = df["Attack"].value_counts().sort_values(ascending=True)
     fig = plt.figure(figsize=(12, 6))
     sns.barplot(x=attack_counts.index, y=attack_counts.values)
@@ -26,8 +27,6 @@ def plot_attack_distribution_bar(df: pd.DataFrame, save_path: str | None = None)
 
 
 def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
-    sns.set_theme(style="whitegrid", context="paper", palette="viridis")
-
     ddos_count = len(df[df["Category"] == "DDoS"])
     dos_count = len(df[df["Category"] == "DoS"])
     plot_data = pd.DataFrame(
@@ -45,8 +44,6 @@ def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
 def plot_attack_categories_no_ddos_dos_bar(
     df: pd.DataFrame, save_path: str | None = None
 ):
-    sns.set_theme(style="whitegrid", context="paper", palette="viridis")
-
     filtered_df = df[df["Category"].isin(["MQTT", "Spoofing", "Recon", "Benign"])]
     category_counts = filtered_df["Category"].value_counts().sort_values(ascending=True)
     fig = plt.figure(figsize=(12, 6))
@@ -60,8 +57,6 @@ def plot_attack_categories_no_ddos_dos_bar(
 
 
 def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = None):
-    sns.set_theme(style="whitegrid", context="paper", palette="viridis")
-
     category_counts = df["Category"].value_counts().sort_values(ascending=True)
     fig = plt.figure(figsize=(12, 6))
     sns.barplot(x=category_counts.index, y=category_counts.values)
@@ -74,74 +69,66 @@ def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = Non
 
 
 def plot_attacks_pie(df: pd.DataFrame, save_path: str | None = None):
-    sns.set_theme(style="whitegrid", context="paper", palette="viridis")
+    category_counts = df["Category"].value_counts()
 
-    table = df.groupby(["Category", "Attack"]).size()
-    outer = table.groupby(level=0).sum()
-    inner = table
+    total_count = category_counts.sum()
+    percentages = (category_counts / total_count) * 100
 
-    cmap_outer = plt.get_cmap("tab20c")
+    min_percentage = 2.5
+    mask_small = percentages < min_percentage
+    other_counts = category_counts[mask_small]
+    other_count_total = other_counts.sum()
+    grouped_counts = category_counts[~mask_small].copy()
 
-    category_count = len(outer)
-    outer_colours = [cmap_outer(i / category_count) for i in range(category_count)]
-    category_colour_map = dict(zip(outer.index, outer_colours))
-    inner_colours = [category_colour_map[category] for category, attack in inner.index]
+    if other_count_total > 0:
+        grouped_counts["Other"] = other_count_total
 
-    fig, ax = plt.subplots(figsize=(14, 10))
-    size = 0.3
+    slices = grouped_counts.values
+    labels = grouped_counts.index
+    final_percentages = (slices / total_count) * 100  # type: ignore
 
-    explode_index = outer.index.get_loc(
-        "Spoofing"
-    )  # Really small slice needs highlighting
-    explode_values = [0] * len(outer)
-    explode_values[explode_index] = 0.15
-
-    wedges_outer = ax.pie(
-        outer.values,
-        radius=1,
-        colors=outer_colours,
-        labels=None,
-        wedgeprops=dict(width=size, edgecolor="w"),
-        startangle=90,
-        explode=explode_values,
-    )[0]
-
-    inner_explode_values = []
-    for category, _ in inner.index:
-        if category == "Spoofing":
-            inner_explode_values.append(explode_values[explode_index])
-        else:
-            inner_explode_values.append(0)
-
-    wedges_inner = ax.pie(
-        inner.values,
-        radius=1 - size,
-        colors=inner_colours,
-        labels=None,
-        wedgeprops=dict(width=size, edgecolor="w"),
-        startangle=90,
-        explode=inner_explode_values,
-    )[0]
-
-    ax.set_aspect("equal")
-
-    legend_outer = ax.legend(
-        wedges_outer,
-        outer.index,
-        title="Category",
-        loc="upper left",
-        bbox_to_anchor=(1.0, 0.95),
+    fig = plt.figure(figsize=(20, 12))
+    wedges, _ = plt.pie(
+        slices,  # type: ignore
+        wedgeprops={"edgecolor": "black"},
+        textprops={"color": "white", "fontsize": 10},
     )
-    ax.add_artist(legend_outer)
 
-    legend_inner = ax.legend(
-        wedges_inner,
-        [attack_name for _, attack_name in inner.index],
-        title="Attack",
+    legend_labels = [
+        f"{label} ({percentage:.2f}%)"
+        for label, percentage in zip(labels, final_percentages)
+    ]
+    main_legend = plt.legend(
+        legend_labels,
+        title="Attack Name",
         loc="upper left",
-        bbox_to_anchor=(1.0, 0.5),
-        ncol=2,
+        bbox_to_anchor=(1.02, 1.0),
     )
-    ax.add_artist(legend_inner)
+    plt.gca().add_artist(main_legend)
+
+    other_percentages = (other_counts / total_count) * 100
+    other_legend_labels = [
+        f"{name} ({percentage:.2f}%)" for name, percentage in other_percentages.items()
+    ]
+
+    category_colours = {label: w.get_facecolor() for label, w in zip(labels, wedges)}
+    other_colour = category_colours["Other"]
+    temp = [
+        Patch(facecolor=other_colour, edgecolor="black") for _ in other_counts.index
+    ]
+
+    breakdown_legend = plt.legend(
+        temp,
+        other_legend_labels,
+        title="Other Breakdown",
+        loc="center left",
+        bbox_to_anchor=(1.0, 0.6),
+        frameon=True,
+    )
+
+    plt.gca().add_artist(breakdown_legend)
+
+    plt.title("Attack Category Distribution")
+    plt.gca().set_aspect("equal")
 
     save_figure(fig, save_path)
