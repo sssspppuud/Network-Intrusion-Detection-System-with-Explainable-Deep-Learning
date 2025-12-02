@@ -22,4 +22,5 @@ CICIoMT2024
 table.html
 data
 datasets
-Figures
+*.png
+__pycache__
