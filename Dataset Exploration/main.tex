@@ -44,32 +44,52 @@
     bottom=25mm
 }
 
+\title{Initial Dataset Exploration}
+\date{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-\section*{Initial Dataset Exploration}
+\maketitle
+
+\section{Specific Attack Types}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackDistBar.png}
+    \caption{Bar chart showing the distribution of network traffic in the dataset.}
+\end{figure}
+
+\newpage
+\section{Attack Categories}
+\subsection{All Attack Categories}
+These charts cover all attack categories, DDoS and DoS make up a very large portion, so charts with
+these categories omitted are shown in the next section.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackDistBar.png}
-    \caption{Bar chart showing the distribution of network traffic in the dataset.}
+    \includegraphics[width=0.8\linewidth]{../Code/out/AllAttackCategoryDistBar.png}
+    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackCategoryDistNoDosDDoS.png}
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPie.png}
+    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
+\end{figure}
+
+\subsection{Attack Categories (DDoS and Dos Omitted)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryDistNoDosDDoS.png}
     \caption{Distribution of network traffic categories, excluding DDoS and DoS traffic.}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\linewidth]{../Code/Figures/AllAttackCategoryDistBar.png}
-    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
+    \includegraphics[width=0.8\linewidth]{../Code/out/DDoSDoSPlot.png}
+    \caption{Counts of DDoS and DoS traffic instances.}
 \end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackCategoryPie.png}
-    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
-\end{figure}
+
+
+
 
 
 
