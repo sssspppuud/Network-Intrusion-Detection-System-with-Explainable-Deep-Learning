@@ -28,16 +28,17 @@ def load_or_generate_dataset(data_root: str, processed_file: str) -> pd.DataFram
 
 
 if __name__ == "__main__":
-    sns.set_theme(style="whitegrid", context="talk", palette="pastel")
+    sns.set_theme(style="whitegrid", context="talk", palette="bright")
 
     df = load_or_generate_dataset(DATA_ROOT, PROCESSED_DATA_FILE)
+
     # Show dataset attack classes and distribution
-    print(df[["Category", "Attack", "Class"]].value_counts())
+    # print(df[["Category", "Attack", "Class"]].value_counts())
 
     plot_attack_categories_no_ddos_dos_bar(
         df, get_figure_path("AttackCategoryDistNoDosDDoS.png")
     )
     plot_attack_distribution_bar(df, get_figure_path("AttackDistBar.png"))
-    plot_ddos_dos_bar(df, get_figure_path("DDoS_DoS_Plot.png"))
+    plot_ddos_dos_bar(df, get_figure_path("DDoSDoSPlot.png"))
     plot_all_attack_categories_bar(df, get_figure_path("AllAttackCategoryDistBar.png"))
     plot_attack_category_pie(df, get_figure_path("AttackCategoryPie.png"))

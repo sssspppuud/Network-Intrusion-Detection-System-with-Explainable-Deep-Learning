@@ -1,0 +1,77 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                     %   
+%    Latex Template Literature Review                                 %
+%    Z. Wang 
+%    Oct 2024
+%    University of Exeter                                             %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{hyperref}
+
+
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{tabularx}
+\renewcommand{\tabularxcolumn}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+
+
+
+
+
+% Page layout settings
+\geometry{
+    a4paper,
+    left=20mm,
+    right=20mm,
+    top=25mm,
+    bottom=25mm
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\section*{Initial Dataset Exploration}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackDistBar.png}
+    \caption{Bar chart showing the distribution of network traffic in the dataset.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackCategoryDistNoDosDDoS.png}
+    \caption{Distribution of network traffic categories, excluding DDoS and DoS traffic.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{../Code/Figures/AllAttackCategoryDistBar.png}
+    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{../Code/Figures/AttackCategoryPie.png}
+    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
+\end{figure}
+
+
+
+\end{document}
+

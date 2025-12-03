@@ -7,19 +7,16 @@ import numpy as np
 
 def save_figure(fig, save_path: str | None):
     if save_path:
-        plt.figure(fig.number)
-        plt.tight_layout()
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         fig.savefig(save_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+        plt.close(fig)
 
 
 def plot_attack_distribution_bar(df: pd.DataFrame, save_path: str | None = None):
     attack_counts = df["Attack"].value_counts().sort_values(ascending=True)
-    fig = plt.figure(figsize=(12, 6))
-    sns.barplot(x=attack_counts.index, y=attack_counts.values)
+    fig, ax = plt.subplots(figsize=(12, 6))
+    sns.barplot(x=attack_counts.index, y=attack_counts.values, ax=ax)
     plt.ticklabel_format(style="plain", axis="y")
-    plt.title("Distribution of Attacks")
     plt.xlabel("Attack Name")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
@@ -33,10 +30,9 @@ def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
         {"Attack Type": ["DDoS", "DoS"], "Count": [ddos_count, dos_count]}
     ).sort_values(by="Count", ascending=True)
 
-    fig = plt.figure(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x="Attack Type", y="Count", data=plot_data)
     plt.ticklabel_format(style="plain", axis="y")
-    plt.title("Count of DDoS vs. DoS Traffic")
     plt.ylabel("Count")
     save_figure(fig, save_path)
 
@@ -46,10 +42,9 @@ def plot_attack_categories_no_ddos_dos_bar(
 ):
     filtered_df = df[df["Category"].isin(["MQTT", "Spoofing", "Recon", "Benign"])]
     category_counts = filtered_df["Category"].value_counts().sort_values(ascending=True)
-    fig = plt.figure(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x=category_counts.index, y=category_counts.values)
     plt.ticklabel_format(style="plain", axis="y")
-    plt.title("Distribution of Attack Categories (Excluding DDoS and DoS)")
     plt.xlabel("Category")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
@@ -58,10 +53,9 @@ def plot_attack_categories_no_ddos_dos_bar(
 
 def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = None):
     category_counts = df["Category"].value_counts().sort_values(ascending=True)
-    fig = plt.figure(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x=category_counts.index, y=category_counts.values)
     plt.ticklabel_format(style="plain", axis="y")
-    plt.title("Distribution of Attack Categories")
     plt.xlabel("Category")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
@@ -76,13 +70,13 @@ def plot_attack_category_pie(df: pd.DataFrame, save_path: str | None = None):
     slices = category_counts.values
     labels = category_counts.index
 
-    cmap = plt.cm.get_cmap("Set2")
+    cmap = plt.cm.get_cmap("Spectral")
     colours = cmap(np.linspace(0, 1, len(slices)))
 
-    fig = plt.figure(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(10, 10))
     plt.pie(
-        slices,  # type: ignore
-        colors=colours,
+        slices,  # pyright: ignore[reportArgumentType]
+        colors=colours,  # pyright: ignore[reportArgumentType]
         wedgeprops=dict(edgecolor="black", linewidth=0.5),
         textprops=dict(color="white", fontsize=10),
     )
@@ -97,7 +91,6 @@ def plot_attack_category_pie(df: pd.DataFrame, save_path: str | None = None):
         bbox_to_anchor=(1.02, 1.0),
     )
 
-    plt.title("Attack Category Distribution")
     plt.gca().set_aspect("equal")
 
     save_figure(fig, save_path)
