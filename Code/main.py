@@ -40,4 +40,4 @@ if __name__ == "__main__":
     plot_attack_distribution_bar(df, get_figure_path("AttackDistBar.png"))
     plot_ddos_dos_bar(df, get_figure_path("DDoS_DoS_Plot.png"))
     plot_all_attack_categories_bar(df, get_figure_path("AllAttackCategoryDistBar.png"))
-    plot_attacks_pie(df, get_figure_path("AttackNestedPie.png"))
+    plot_attack_category_pie(df, get_figure_path("AttackCategoryPie.png"))

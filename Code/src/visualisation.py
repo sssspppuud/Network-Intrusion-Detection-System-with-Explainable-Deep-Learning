@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 import os
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 
 def save_figure(fig, save_path: str | None):
@@ -10,7 +10,7 @@ def save_figure(fig, save_path: str | None):
         plt.figure(fig.number)
         plt.tight_layout()
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        fig.savefig(save_path, dpi=300)
+        fig.savefig(save_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -68,65 +68,34 @@ def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = Non
     save_figure(fig, save_path)
 
 
-def plot_attacks_pie(df: pd.DataFrame, save_path: str | None = None):
+def plot_attack_category_pie(df: pd.DataFrame, save_path: str | None = None):
     category_counts = df["Category"].value_counts()
 
     total_count = category_counts.sum()
     percentages = (category_counts / total_count) * 100
+    slices = category_counts.values
+    labels = category_counts.index
 
-    min_percentage = 2.5
-    mask_small = percentages < min_percentage
-    other_counts = category_counts[mask_small]
-    other_count_total = other_counts.sum()
-    grouped_counts = category_counts[~mask_small].copy()
+    cmap = plt.cm.get_cmap("Set2")
+    colours = cmap(np.linspace(0, 1, len(slices)))
 
-    if other_count_total > 0:
-        grouped_counts["Other"] = other_count_total
-
-    slices = grouped_counts.values
-    labels = grouped_counts.index
-    final_percentages = (slices / total_count) * 100  # type: ignore
-
-    fig = plt.figure(figsize=(20, 12))
-    wedges, _ = plt.pie(
+    fig = plt.figure(figsize=(10, 8))
+    plt.pie(
         slices,  # type: ignore
-        wedgeprops={"edgecolor": "black"},
-        textprops={"color": "white", "fontsize": 10},
+        colors=colours,
+        wedgeprops=dict(edgecolor="black", linewidth=0.5),
+        textprops=dict(color="white", fontsize=10),
     )
 
     legend_labels = [
-        f"{label} ({percentage:.2f}%)"
-        for label, percentage in zip(labels, final_percentages)
+        f"{label} ({percentage:.2f}%)" for label, percentage in zip(labels, percentages)
     ]
     main_legend = plt.legend(
         legend_labels,
-        title="Attack Name",
+        title="Traffic Type",
         loc="upper left",
         bbox_to_anchor=(1.02, 1.0),
     )
-    plt.gca().add_artist(main_legend)
-
-    other_percentages = (other_counts / total_count) * 100
-    other_legend_labels = [
-        f"{name} ({percentage:.2f}%)" for name, percentage in other_percentages.items()
-    ]
-
-    category_colours = {label: w.get_facecolor() for label, w in zip(labels, wedges)}
-    other_colour = category_colours["Other"]
-    temp = [
-        Patch(facecolor=other_colour, edgecolor="black") for _ in other_counts.index
-    ]
-
-    breakdown_legend = plt.legend(
-        temp,
-        other_legend_labels,
-        title="Other Breakdown",
-        loc="center left",
-        bbox_to_anchor=(1.0, 0.6),
-        frameon=True,
-    )
-
-    plt.gca().add_artist(breakdown_legend)
 
     plt.title("Attack Category Distribution")
     plt.gca().set_aspect("equal")

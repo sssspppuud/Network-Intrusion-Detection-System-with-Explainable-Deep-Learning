@@ -1,5 +1,3 @@
-.obsidian
-IoT
 *.aux
 *.fdb_latexmk
 *.log
@@ -8,19 +6,19 @@ IoT
 *.bbl
 *.blg
 *.bbl
-lit_review_plan.md
-.~lock.Report draft.odt#
-.~lock.GanttChart.ods#
-.~lock.GanttChart2.ods#
-.~lock.GanttChart_New.ods#
-draft_word.docx
+*.md
+.*.odt#
+.*.ods#
+*.docx
 .venv
-CICIoMT2024
 .vscode
-
 .gitignore
-table.html
-data
-datasets
+test
+train
+*.parquet
 *.png
 __pycache__
+Other
+Reading
+Examples
+*.pdf
