@@ -1,123 +1,96 @@
-import os
+import glob
 import pandas as pd
+from typing import Tuple
 
 
-def load_dataset(root: str, subset: str) -> pd.DataFrame:
-    subset_path = os.path.join(root, subset)
+def get_labels_from_filename(filename: str) -> Tuple[str, str, str]:
+    if "Benign" in filename:
+        return "Benign", "Benign", "Benign"
 
-    if not os.path.exists(subset_path):
-        raise FileNotFoundError(f"Directory not found: {subset_path}")
+    label = "Attack"
 
+    if "ARP_Spoofing" in filename:
+        return label, "Spoofing", "ARP Spoofing"
+
+    if "Recon" in filename:
+        category = "Recon"
+        if "Recon-Ping_Sweep" in filename:
+            return label, category, "Ping Sweep"
+        if "Recon-VulScan" in filename:
+            return label, category, "VulScan"
+        if "Recon-OS_Scan" in filename:
+            return label, category, "OS Scan"
+        if "Recon-Port_Scan" in filename:
+            return label, category, "Port Scan"
+
+    if "MQTT" in filename:
+        category = "MQTT"
+        if "MQTT-Malformed_Data" in filename:
+            return label, category, "Malformed Data"
+        if "MQTT-DoS-Connect_Flood" in filename:
+            return label, category, "DoS Connect Flood"
+        if "MQTT-DDoS-Publish_Flood" in filename:
+            return label, category, "DDoS Publish Flood"
+        if "MQTT-DoS-Publish_Flood" in filename:
+            return label, category, "DoS Publish Flood"
+        if "MQTT-DDoS-Connect_Flood" in filename:
+            return label, category, "DDoS Connect Flood"
+
+    if "TCP_IP-DoS" in filename:
+        category = "DoS"
+        if "TCP_IP-DoS-TCP" in filename:
+            return label, category, "DoS TCP"
+        if "TCP_IP-DoS-ICMP" in filename:
+            return label, category, "DoS ICMP"
+        if "TCP_IP-DoS-SYN" in filename:
+            return label, category, "DoS SYN"
+        if "TCP_IP-DoS-UDP" in filename:
+            return label, category, "DoS UDP"
+
+    if "TCP_IP-DDoS" in filename:
+        category = "DDoS"
+        if "TCP_IP-DDoS-SYN" in filename:
+            return label, category, "DDoS SYN"
+        if "TCP_IP-DDoS-TCP" in filename:
+            return label, category, "DDoS TCP"
+        if "TCP_IP-DDoS-ICMP" in filename:
+            return label, category, "DDoS ICMP"
+        if "TCP_IP-DDoS-UDP" in filename:
+            return label, category, "DDoS UDP"
+
+    return "", "", ""  # Should never reach here with correct dataset format
+
+
+# def dataset_to_single_file(root: str, out: str):
+#     path = f"{root}/*/*.csv"
+#     csv_files = glob.glob(path)
+
+#     dfs = [pd.read_csv(file) for file in csv_files]
+#     combined_df = pd.concat(dfs, ignore_index=True)
+#     combined_df.to_csv("dataset.csv", index=False)
+
+
+def combine_dataset(root: str) -> None:
+    """
+    Load all csv files for the dataset, ands categorical columns, then
+    saves it to a single csv file.
+
+    :param root: Path to the dataset stored in the form train/ and test/
+    :type root: str
+    """
+    path = f"{root}/*/*.csv"
     dfs = []
+    for file in glob.glob(path, recursive=True):
+        label, category, attack = get_labels_from_filename(file)
+        df = pd.read_csv(file)
+        df[["Label", "Category", "Attack"]] = [label, category, attack]
+        dfs.append(df)
+    dfs = pd.concat(dfs)
 
-    # Finds all relevant dataset files
-    files = [file for file in os.listdir(subset_path) if file.endswith(".pcap.csv")]
+    for column in dfs.select_dtypes(include=["int"]):
+        dfs[column] = pd.to_numeric(dfs[column], downcast="integer")
 
-    for filename in files:
-        try:
-            label, category, attack = None, None, None
+    for column in dfs.select_dtypes(include=["float"]):
+        dfs[column] = pd.to_numeric(dfs[column], downcast="float")
 
-            file_path = os.path.join(subset_path, filename)
-            df = pd.read_csv(file_path)
-
-            cleaned_filename = filename.replace(".pcap.csv", "")  # Remove extension
-            if cleaned_filename[-1].isdigit():
-                # Remove number from end of filename
-                cleaned_filename = cleaned_filename[:-1]
-
-            if "Benign" in cleaned_filename:
-                label = "Benign"
-                category = "Benign"
-                attack = "Benign"
-
-            elif "ARP_Spoofing" in cleaned_filename:
-                label = "Attack"
-                category = "Spoofing"
-                attack = "ARP Spoofing"
-
-            elif "Recon-Ping_Sweep" in filename:
-                label = "Attack"
-                category = "Recon"
-                attack = "Ping Sweep"
-            elif "Recon-VulScan" in filename:
-                label = "Attack"
-                category = "Recon"
-                attack = "VulScan"
-            elif "Recon-OS_Scan" in filename:
-                label = "Attack"
-                category = "Recon"
-                attack = "OS Scan"
-            elif "Recon-Port_Scan" in filename:
-                label = "Attack"
-                category = "Recon"
-                attack = "Port Scan"
-
-            elif "MQTT-Malformed_Data" in filename:
-                label = "Attack"
-                category = "MQTT"
-                attack = "Malformed Data"
-            elif "MQTT-DoS-Connect_Flood" in filename:
-                label = "Attack"
-                category = "MQTT"
-                attack = "DoS Connect Flood"
-            elif "MQTT-DDoS-Publish_Flood" in filename:
-                label = "Attack"
-                category = "MQTT"
-                attack = "Publish Flood"
-            elif "MQTT-DoS-Publish_Flood" in filename:
-                label = "Attack"
-                category = "MQTT"
-                attack = "Publish Flood"
-            elif "MQTT-DDoS-Connect_Flood" in filename:
-                label = "Attack"
-                category = "MQTT"
-                attack = "Connect Flood"
-
-            elif "TCP_IP-DoS-TCP" in filename:
-                label = "Attack"
-                category = "DoS"
-                attack = "DoS TCP"
-            elif "TCP_IP-DoS-ICMP" in filename:
-                label = "Attack"
-                category = "DoS"
-                attack = "DoS ICMP"
-            elif "TCP_IP-DoS-SYN" in filename:
-                label = "Attack"
-                category = "DoS"
-                attack = "DoS SYN"
-            elif "TCP_IP-DoS-UDP" in filename:
-                label = "Attack"
-                category = "DoS"
-                attack = "DoS UDP"
-
-            elif "TCP_IP-DDoS-SYN" in filename:
-                label = "Attack"
-                category = "DDoS"
-                attack = "DDoS SYN"
-            elif "TCP_IP-DDoS-TCP" in filename:
-                label = "Attack"
-                category = "DDoS"
-                attack = "DDoS TCP"
-            elif "TCP_IP-DDoS-ICMP" in filename:
-                label = "Attack"
-                category = "DDoS"
-                attack = "DDoS ICMP"
-            elif "TCP_IP-DDoS-UDP" in filename:
-                label = "Attack"
-                category = "DDoS"
-                attack = "DDoS UDP"
-
-            df["Attack"] = attack
-            df["Category"] = category
-            df["Class"] = label
-
-            dfs.append(df)
-
-        except Exception as e:
-            print(f"Failed to process file {filename} : {e}")
-
-    if not dfs:
-        print(f"No files found in {subset_path}")
-        return pd.DataFrame()
-
-    return pd.concat(dfs, ignore_index=True)
+    dfs.to_csv(f"{root}/combined_dataset.csv", index=False)

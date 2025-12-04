@@ -40,9 +40,7 @@ def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
     save_figure(fig, save_path)
 
 
-def plot_attack_categories_no_ddos_dos_bar(
-    df: pd.DataFrame, save_path: str | None = None
-):
+def plot_categories_no_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
     filtered_df = df[df["Category"].isin(["MQTT", "Spoofing", "Recon", "Benign"])]
     category_counts = filtered_df["Category"].value_counts().sort_values(ascending=True)
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -66,7 +64,7 @@ def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = Non
 
 
 def plot_attack_benign_pie(df: pd.DataFrame, save_path: str | None = None):
-    category_counts = df["Class"].value_counts()
+    category_counts = df["Label"].value_counts()
 
     total_count = category_counts.sum()
     percentages = (category_counts / total_count) * 100
@@ -127,7 +125,7 @@ def sample_group(group):
 
 # def plt_pca(df: pd.DataFrame, save_path: str | None = None):
 
-#     df_sample = df.groupby("Class", group_keys=False).apply(sample_group)
+#     df_sample = df.groupby("Label", group_keys=False).apply(sample_group)
 
 #     numerical_columns = df.select_dtypes(["float64", "int64"]).columns
 
@@ -141,7 +139,7 @@ def sample_group(group):
 #     sns.scatterplot(
 #         x=pca_results[:, 0],
 #         y=pca_results[:, 1],
-#         hue=df_sample["Class"],
+#         hue=df_sample["Label"],
 #         alpha=0.5,
 #         palette="tab10",
 #         rasterized=True,

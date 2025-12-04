@@ -1,30 +1,15 @@
 import pandas as pd
 import seaborn as sns
 
-from src.data_loader import load_dataset
+from src.data_loader import combine_dataset
 from src.visualisation import *
 
 from config.settings import (
     DATA_ROOT,
-    TRAIN_SUBSET,
-    TEST_SUBSET,
-    PROCESSED_DATA_FILE,
     get_figure_path,
 )
 
-
-def load_or_generate_dataset(data_root: str, processed_file: str) -> pd.DataFrame:
-    if os.path.exists(processed_file):
-        return pd.read_parquet(processed_file)
-
-    train = load_dataset(DATA_ROOT, TRAIN_SUBSET)
-    test = load_dataset(DATA_ROOT, TEST_SUBSET)
-    df = pd.concat([train, test], ignore_index=True)
-
-    os.makedirs(os.path.dirname(processed_file), exist_ok=True)
-    df.to_parquet(processed_file, index=False)
-
-    return df
+from src.preprocessing import split_dataset, apply_smote
 
 
 if __name__ == "__main__":
@@ -35,16 +20,19 @@ if __name__ == "__main__":
     """
     sns.set_theme(style="whitegrid", context="talk", palette="bright")
 
-    df = load_or_generate_dataset(DATA_ROOT, PROCESSED_DATA_FILE)
+    if not os.path.exists(f"{DATA_ROOT}/combined_dataset.csv"):
+        combine_dataset(DATA_ROOT)
 
-    print(df[["Category", "Attack", "Class"]].value_counts())
+    chunk_iter = pd.read_csv(f"{DATA_ROOT}/combined_dataset.csv", chunksize=50000)
 
-    plot_attack_categories_no_ddos_dos_bar(
-        df, get_figure_path("AttackCategoryDistNoDosDDoS.png")
-    )
-    plot_attack_distribution_bar(df, get_figure_path("AttackDistBar.png"))
-    plot_ddos_dos_bar(df, get_figure_path("DDoSDoSPlot.png"))
-    plot_all_attack_categories_bar(df, get_figure_path("AllAttackCategoryDistBar.png"))
-    plot_attack_benign_pie(df, get_figure_path("AttackBenignPie.png"))
-    plot_correlation_heatmap(df, get_figure_path("CorrelationHeatmap.png"))
-    # plt_pca(df, get_figure_path("PCAPlot.png"))
+    # Plots before preprocessing, entire dataset
+    # plot_categories_no_ddos_dos_bar(df, get_figure_path("AttackCatDistNoDosDDoS.png"))
+    # plot_attack_distribution_bar(df, get_figure_path("AttackDistBar.png"))
+    # plot_ddos_dos_bar(df, get_figure_path("DDoSDoSPlot.png"))
+    # plot_all_attack_categories_bar(df, get_figure_path("AllAttackCategoryDistBar.png"))
+    # plot_attack_benign_pie(df, get_figure_path("AttackBenignPie.png"))
+    # plot_correlation_heatmap(df, get_figure_path("CorrelationHeatmap.png"))
+
+    # Splitting data (Category prediction first)
+    # X_train, X_test, y_train, y_test = split_dataset(df, "Category", 0.2)
+    # apply_smote(X_train, y_train)

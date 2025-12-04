@@ -13,8 +13,6 @@
 .venv
 .vscode
 .gitignore
-test
-train
 *.parquet
 *.png
 __pycache__
@@ -22,3 +20,4 @@ Other
 Reading
 Examples
 *.pdf
+*.csv
