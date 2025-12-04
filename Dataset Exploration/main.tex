@@ -52,6 +52,17 @@
 
 \maketitle
 
+\section{Attack vs Benign}
+The dataset has a large class imbalance, where an overwhelming portion of the data is
+network traffic that is malicious, as can be seen in \ref{fig:AttackBenignPie}. This
+distribution is further broken down in the next sections.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackBenignPie.png}
+    \caption{Pie chart showing class imbalance between attack and benign traffic.}
+    \label{fig:AttackBenignPie}
+\end{figure}
+
 \section{Specific Attack Types}
 \begin{figure}[H]
     \centering
@@ -59,24 +70,18 @@
     \caption{Bar chart showing the distribution of network traffic in the dataset.}
 \end{figure}
 
-\newpage
 \section{Attack Categories}
 \subsection{All Attack Categories}
-These charts cover all attack categories, DDoS and DoS make up a very large portion, so charts with
-these categories omitted are shown in the next section.
+This chart covers all attack categories, DDoS and DoS make up a very large portion, so charts with
+these categories seperated are shown in the next section.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{../Code/out/AllAttackCategoryDistBar.png}
     \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
 \end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPie.png}
-    \caption{Distribution of network traffic categories, including DDoS and DoS traffic.}
-\end{figure}
 
-\subsection{Attack Categories (DDoS and Dos Omitted)}
+\subsection{Attack Categories (DDoS and Dos Seperated)}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryDistNoDosDDoS.png}
@@ -88,7 +93,21 @@ these categories omitted are shown in the next section.
     \caption{Counts of DDoS and DoS traffic instances.}
 \end{figure}
 
+To address the large class imbalance seen in \ref{fig:AttackBenignPie}, SMOTE will
+be used, before moving onto feature analysis.
 
+\newpage
+\section{Numerical Features}
+The Correlation Heatmap shows the correlation between numerical feautures.
+Dark blue meaning negatively correlated, and red meaning positively correlated.
+\subsection{Correlation Heatmap}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/CorrelationHeatmap.png}
+    \caption{Correlation heatmap of numerical features in the dataset.}
+\end{figure}
+
+\url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10911967}
 
 
 
