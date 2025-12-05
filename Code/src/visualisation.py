@@ -4,31 +4,34 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+from config.settings import FIGURES_ROOT
 
 
-def save_figure(fig, save_path: str | None):
-    if save_path:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        fig.savefig(save_path, dpi=300, bbox_inches="tight")
-        plt.close(fig)
+def save_figure(fig, save_name: str | None):
+    if not save_name:
+        return
+
+    path = os.path.join(FIGURES_ROOT, save_name)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    fig.savefig(path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
 
 
-def plot_attack_distribution_bar(df: pd.DataFrame, save_path: str | None = None):
-    attack_counts = df["Attack"].value_counts().sort_values(ascending=True)
+def plot_attack_distribution_bar(df: pd.DataFrame, save_name: str | None = None):
+    attack_counts = df["Name"].value_counts().sort_values(ascending=True)
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x=attack_counts.index, y=attack_counts.values, ax=ax)
     plt.ticklabel_format(style="plain", axis="y")
     plt.xlabel("Attack Name")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
-    save_figure(fig, save_path)
+    save_figure(fig, save_name)
 
 
-def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
-    ddos_count = len(df[df["Category"] == "DDoS"])
-    dos_count = len(df[df["Category"] == "DoS"])
+def plot_ddos_dos_bar(df: pd.DataFrame, save_name: str | None = None):
+    category_column = df["Category"].astype(str)
+    ddos_count = (category_column == "DDoS").sum()
+    dos_count = (category_column == "DoS").sum()
     plot_data = pd.DataFrame(
         {"Attack Type": ["DDoS", "DoS"], "Count": [ddos_count, dos_count]}
     ).sort_values(by="Count", ascending=True)
@@ -37,22 +40,25 @@ def plot_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
     sns.barplot(x="Attack Type", y="Count", data=plot_data, ax=ax)
     plt.ticklabel_format(style="plain", axis="y")
     plt.ylabel("Count")
-    save_figure(fig, save_path)
+    save_figure(fig, save_name)
 
 
-def plot_categories_no_ddos_dos_bar(df: pd.DataFrame, save_path: str | None = None):
-    filtered_df = df[df["Category"].isin(["MQTT", "Spoofing", "Recon", "Benign"])]
-    category_counts = filtered_df["Category"].value_counts().sort_values(ascending=True)
+def plot_categories_no_ddos_dos_bar(df: pd.DataFrame, save_name: str | None = None):
+    category_column = df["Category"].astype(str)
+    filtered_df = df[category_column.isin(["MQTT", "Spoofing", "Recon", "Benign"])]
+    category_counts = (
+        filtered_df["Category"].astype(str).value_counts().sort_values(ascending=True)
+    )
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x=category_counts.index, y=category_counts.values, ax=ax)
     plt.ticklabel_format(style="plain", axis="y")
     plt.xlabel("Category")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
-    save_figure(fig, save_path)
+    save_figure(fig, save_name)
 
 
-def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = None):
+def plot_all_attack_categories_bar(df: pd.DataFrame, save_name: str | None = None):
     category_counts = df["Category"].value_counts().sort_values(ascending=True)
     fig, ax = plt.subplots(figsize=(12, 6))
     sns.barplot(x=category_counts.index, y=category_counts.values, ax=ax)
@@ -60,11 +66,11 @@ def plot_all_attack_categories_bar(df: pd.DataFrame, save_path: str | None = Non
     plt.xlabel("Category")
     plt.ylabel("Count")
     plt.xticks(rotation=45, ha="right")
-    save_figure(fig, save_path)
+    save_figure(fig, save_name)
 
 
-def plot_attack_benign_pie(df: pd.DataFrame, save_path: str | None = None):
-    category_counts = df["Label"].value_counts()
+def plot_attack_benign_pie(df: pd.DataFrame, save_name: str | None = None):
+    category_counts = df["Attack"].value_counts()
 
     total_count = category_counts.sum()
     percentages = (category_counts / total_count) * 100
@@ -94,17 +100,17 @@ def plot_attack_benign_pie(df: pd.DataFrame, save_path: str | None = None):
 
     plt.gca().set_aspect("equal")
 
-    save_figure(fig, save_path)
+    save_figure(fig, save_name)
 
 
-def plot_correlation_heatmap(df: pd.DataFrame, save_path: str | None = None):
-    numeric_data = df.select_dtypes(["float64", "int64"])
+def plot_correlation_heatmap(df: pd.DataFrame, save_name: str | None = None):
+    numeric_data = df.drop(columns=["Attack", "Category", "Name"])
     numeric_data.columns = numeric_data.columns.str.lower()
 
     corr = numeric_data.corr()
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
-    fig, ax = plt.subplots(figsize=(15, 15))
+    fig, ax = plt.subplots(figsize=(15, len(corr.columns) // 2))
     sns.heatmap(
         numeric_data.corr(),
         cmap="coolwarm",
@@ -114,35 +120,4 @@ def plot_correlation_heatmap(df: pd.DataFrame, save_path: str | None = None):
         cbar_kws=dict(label="Correlation Coefficient"),
     )
 
-    save_figure(fig, save_path)
-
-
-def sample_group(group):
-    n_samples_per_class = 230000
-    n = min(len(group), n_samples_per_class)
-    return group.sample(n=n, random_state=42)
-
-
-# def plt_pca(df: pd.DataFrame, save_path: str | None = None):
-
-#     df_sample = df.groupby("Label", group_keys=False).apply(sample_group)
-
-#     numerical_columns = df.select_dtypes(["float64", "int64"]).columns
-
-#     scaler = StandardScaler()
-#     X_scaled = scaler.fit_transform(df_sample[numerical_columns])
-
-#     pca = PCA(n_components=2)
-#     pca_results = pca.fit_transform(X_scaled)
-
-#     fig, ax = plt.subplots(figsize=(15, 15))
-#     sns.scatterplot(
-#         x=pca_results[:, 0],
-#         y=pca_results[:, 1],
-#         hue=df_sample["Label"],
-#         alpha=0.5,
-#         palette="tab10",
-#         rasterized=True,
-#     )
-#     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.0)
-#     save_figure(fig, save_path)
+    save_figure(fig, save_name)
