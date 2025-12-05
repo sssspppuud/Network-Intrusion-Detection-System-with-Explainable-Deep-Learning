@@ -1,76 +1,68 @@
 import glob
-import pandas as pd
 from typing import Tuple
 
+import pyarrow as pa
+import pyarrow.csv as csv
+import pyarrow.parquet as pq
 
-def get_labels_from_filename(filename: str) -> Tuple[str, str, str]:
+
+def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
     if "Benign" in filename:
-        return "Benign", "Benign", "Benign"
-
-    label = "Attack"
+        return "Benign", "Benign", False
 
     if "ARP_Spoofing" in filename:
-        return label, "Spoofing", "ARP Spoofing"
+        return "ARP Spoofing", "Spoofing", True
 
     if "Recon" in filename:
         category = "Recon"
         if "Recon-Ping_Sweep" in filename:
-            return label, category, "Ping Sweep"
+            return "Ping Sweep", category, True
         if "Recon-VulScan" in filename:
-            return label, category, "VulScan"
+            return "VulScan", category, True
         if "Recon-OS_Scan" in filename:
-            return label, category, "OS Scan"
+            return "OS Scan", category, True
         if "Recon-Port_Scan" in filename:
-            return label, category, "Port Scan"
+            return "Port Scan", category, True
 
     if "MQTT" in filename:
         category = "MQTT"
         if "MQTT-Malformed_Data" in filename:
-            return label, category, "Malformed Data"
+            return "Malformed Data", category, True
         if "MQTT-DoS-Connect_Flood" in filename:
-            return label, category, "DoS Connect Flood"
+            return "DoS Connect Flood", category, True
         if "MQTT-DDoS-Publish_Flood" in filename:
-            return label, category, "DDoS Publish Flood"
+            return "DDoS Publish Flood", category, True
         if "MQTT-DoS-Publish_Flood" in filename:
-            return label, category, "DoS Publish Flood"
+            return "DoS Publish Flood", category, True
         if "MQTT-DDoS-Connect_Flood" in filename:
-            return label, category, "DDoS Connect Flood"
+            return "DDoS Connect Flood", category, True
 
     if "TCP_IP-DoS" in filename:
         category = "DoS"
         if "TCP_IP-DoS-TCP" in filename:
-            return label, category, "DoS TCP"
+            return "DoS TCP", category, True
         if "TCP_IP-DoS-ICMP" in filename:
-            return label, category, "DoS ICMP"
+            return "DoS ICMP", category, True
         if "TCP_IP-DoS-SYN" in filename:
-            return label, category, "DoS SYN"
+            return "DoS SYN", category, True
         if "TCP_IP-DoS-UDP" in filename:
-            return label, category, "DoS UDP"
+            return "DoS UDP", category, True
 
     if "TCP_IP-DDoS" in filename:
         category = "DDoS"
         if "TCP_IP-DDoS-SYN" in filename:
-            return label, category, "DDoS SYN"
+            return "DDoS SYN", category, True
         if "TCP_IP-DDoS-TCP" in filename:
-            return label, category, "DDoS TCP"
+            return "DDoS TCP", category, True
         if "TCP_IP-DDoS-ICMP" in filename:
-            return label, category, "DDoS ICMP"
+            return "DDoS ICMP", category, True
         if "TCP_IP-DDoS-UDP" in filename:
-            return label, category, "DDoS UDP"
+            return "DDoS UDP", category, True
 
-    return "", "", ""  # Should never reach here with correct dataset format
-
-
-# def dataset_to_single_file(root: str, out: str):
-#     path = f"{root}/*/*.csv"
-#     csv_files = glob.glob(path)
-
-#     dfs = [pd.read_csv(file) for file in csv_files]
-#     combined_df = pd.concat(dfs, ignore_index=True)
-#     combined_df.to_csv("dataset.csv", index=False)
+    return "", "", False  # Should never reach here with correct dataset format
 
 
-def combine_dataset(root: str) -> None:
+def combine_dataset_to_pq(root: str) -> None:
     """
     Load all csv files for the dataset, ands categorical columns, then
     saves it to a single csv file.
@@ -78,19 +70,20 @@ def combine_dataset(root: str) -> None:
     :param root: Path to the dataset stored in the form train/ and test/
     :type root: str
     """
+    tables = []
     path = f"{root}/*/*.csv"
-    dfs = []
-    for file in glob.glob(path, recursive=True):
-        label, category, attack = get_labels_from_filename(file)
-        df = pd.read_csv(file)
-        df[["Label", "Category", "Attack"]] = [label, category, attack]
-        dfs.append(df)
-    dfs = pd.concat(dfs)
+    files = glob.glob(path, recursive=True)
+    out_path = f"{root}/combined_dataset.parquet"
 
-    for column in dfs.select_dtypes(include=["int"]):
-        dfs[column] = pd.to_numeric(dfs[column], downcast="integer")
+    for file in files:
+        name, category, attack = get_labels_from_filename(file)
+        table = csv.read_csv(file)
+        n = table.num_rows
 
-    for column in dfs.select_dtypes(include=["float"]):
-        dfs[column] = pd.to_numeric(dfs[column], downcast="float")
+        table = table.append_column("Name", pa.array([name] * n))
+        table = table.append_column("Category", pa.array([category] * n))
+        table = table.append_column("Attack", pa.array([attack] * n))
 
-    dfs.to_csv(f"{root}/combined_dataset.csv", index=False)
+        tables.append(table)
+    combined = pa.concat_tables(tables)
+    pq.write_table(combined, out_path)
