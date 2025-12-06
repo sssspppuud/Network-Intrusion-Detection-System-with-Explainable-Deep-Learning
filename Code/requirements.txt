@@ -6,3 +6,4 @@ scikit-learn
 fastparquet
 pyarrow
 imbalanced-learn
+polars

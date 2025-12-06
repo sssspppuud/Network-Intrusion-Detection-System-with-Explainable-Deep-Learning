@@ -5,7 +5,7 @@ import pyarrow as pa
 import pyarrow.csv as csv
 import pyarrow.parquet as pq
 
-import pandas as pd
+import polars as pl
 
 
 def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
@@ -64,7 +64,7 @@ def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
     return "", "", False  # Should never reach here with correct dataset format
 
 
-def combine_dataset_to_pq_pyarrow(root: str) -> None:
+def combine_dataset_to_pq(root: str) -> None:
     """
     Load all csv files for the dataset, ands categorical columns, then
     saves it to a single csv file.
@@ -72,35 +72,26 @@ def combine_dataset_to_pq_pyarrow(root: str) -> None:
     :param root: Path to the dataset stored in the form train/ and test/
     :type root: str
     """
-    tables = []
     path = f"{root}/*/*.csv"
     files = glob.glob(path, recursive=True)
     out_path = f"{root}/combined_dataset.parquet"
 
-    for file in files:
-        name, category, attack = get_labels_from_filename(file)
-        table = csv.read_csv(file)
-        n = table.num_rows
+    frames = []
+    with pl.StringCache():
+        for file in files:
+            name, category, attack = get_labels_from_filename(file)
 
-        table = table.append_column("Name", pa.array([name] * n, type=pa.string()))
-        table = table.append_column(
-            "Category", pa.array([category] * n, type=pa.string())
-        )
-        table = table.append_column("Attack", pa.array([attack] * n, type=pa.bool_()))
+            lf = pl.scan_csv(file)
 
-        tables.append(table)
-    combined = pa.concat_tables(tables)
-    dict_type = pa.dictionary(pa.int32(), pa.string())
+            lf = lf.with_columns(
+                [
+                    pl.lit(name).alias("Name").cast(pl.Categorical),
+                    pl.lit(category).alias("Category").cast(pl.Categorical),
+                    pl.lit(attack).alias("Attack"),
+                ]
+            )
 
-    schema = combined.schema
-    new_fields = []
-    for field in schema:
-        if field.name in ["Name", "Category"]:
-            new_fields.append(pa.field(field.name, dict_type))
-        else:
-            new_fields.append(field)
+            frames.append(lf)
 
-    new_schema = pa.schema(new_fields)
-    combined = combined.cast(new_schema)
-
-    pq.write_table(combined, out_path)
+        combined_lf = pl.concat(frames)
+        combined_lf.sink_parquet(out_path)
