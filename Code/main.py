@@ -4,20 +4,18 @@ from collections import Counter
 from sklearn.preprocessing import StandardScaler
 
 from config.settings import DATA_ROOT
-from src.data_loader import combine_dataset_to_pq_pyarrow, combine_dataset_to_pq_pandas
-from src.visualisation import *
-from src.preprocessing import (
+from Code.src.dataset_management import (
+    combine_dataset_to_pq_pyarrow,
+    combine_dataset_to_pq_pandas,
+)
+from Code.src.eda_visualisation import *
+from Code.src.features import (
     split_and_label_dataset,
     undersample_majority,
 )
 
 
 if __name__ == "__main__":
-    """
-    Class : Attack or Benign
-    Category: Broad Attack category,
-    Attack : Specific Attack name
-    """
     sns.set_theme(style="whitegrid", context="talk", palette="bright")
 
     if not os.path.exists(f"{DATA_ROOT}/combined_dataset.parquet"):
@@ -31,9 +29,6 @@ if __name__ == "__main__":
 
     columns = df.select_dtypes(include=["float64"]).columns
     df[columns] = df[columns].astype("float32")
-    # print(f"{float(df.memory_usage(deep=True).sum()) / (1024 * 1024 * 1024)} GB")
-
-    # print(df[["Category", "Attack", "Name"]].value_counts())
 
     # Plots before preprocessing, entire dataset
     # plot_categories_no_ddos_dos_bar(df, "AttackCatDistNoDosDDoS.png")
