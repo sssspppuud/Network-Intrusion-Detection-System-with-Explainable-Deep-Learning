@@ -142,33 +142,3 @@ def plot_correlation_heatmap(df: pd.DataFrame, save_name: str | None = None):
         )
 
         save_figure(fig, save_name)
-
-
-def plot_pca_attack_or_benign(
-    X: pd.DataFrame,
-    y: pd.DataFrame,
-    save_name: str | None = None,
-):
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    pca = PCA(n_components=2)
-    principal_components = pca.fit_transform(X_scaled)
-
-    pca_df = pd.DataFrame(data=principal_components, columns=["PC1", "PC2"])
-    pca_df["Label"] = y.values
-
-    fig, ax = plt.subplots(figsize=(12, 10))
-    sns.scatterplot(
-        x="PC1",
-        y="PC2",
-        hue="Label",
-        data=pca_df,
-        palette="tab10",
-        alpha=0.4,
-        ax=ax,
-    )
-    ax.legend(title="Attack?", loc="upper left", bbox_to_anchor=(1.01, 1))
-    ax.grid(True, linestyle="--", alpha=0.6)
-
-    save_figure(fig, save_name)

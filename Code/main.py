@@ -1,18 +1,12 @@
 import pandas as pd
 import seaborn as sns
-from collections import Counter
-from sklearn.preprocessing import StandardScaler
 
 from config.settings import DATA_ROOT
-from Code.src.dataset_management import (
+from src.dataset_management import (
     combine_dataset_to_pq_pyarrow,
     combine_dataset_to_pq_pandas,
 )
-from Code.src.eda_visualisation import *
-from Code.src.features import (
-    split_and_label_dataset,
-    undersample_majority,
-)
+from src.eda_visualisation import *
 
 
 if __name__ == "__main__":
@@ -37,13 +31,3 @@ if __name__ == "__main__":
     # plot_all_attack_categories_bar(df, "AllAttackCategoryDistBar.png")
     # plot_attack_benign_pie(df, "AttackBenignPie.png")
     # plot_correlation_heatmap(df.sample(n=1000000), "CorrelationHeatmap.png")
-
-    X_train, X_test, y_train, y_test = split_and_label_dataset(
-        df, target_column="Attack", test_size=0.2
-    )
-
-    X_train_balanced, y_train_balanced = undersample_majority(X_train, y_train)
-    # print("Original training set class distribution:", Counter(y_train))
-    # print("Balanced training set class distribution:", Counter(y_train_balanced))
-
-    plot_pca_attack_or_benign(X_train_balanced, y_train_balanced, "PCAPlot.png")
