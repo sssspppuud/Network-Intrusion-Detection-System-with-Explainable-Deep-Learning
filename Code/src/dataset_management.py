@@ -82,34 +82,25 @@ def combine_dataset_to_pq_pyarrow(root: str) -> None:
         table = csv.read_csv(file)
         n = table.num_rows
 
-        table = table.append_column("Name", pa.array([name] * n))
-        table = table.append_column("Category", pa.array([category] * n))
-        table = table.append_column("Attack", pa.array([attack] * n))
+        table = table.append_column("Name", pa.array([name] * n, type=pa.string()))
+        table = table.append_column(
+            "Category", pa.array([category] * n, type=pa.string())
+        )
+        table = table.append_column("Attack", pa.array([attack] * n, type=pa.bool_()))
 
         tables.append(table)
     combined = pa.concat_tables(tables)
+    dict_type = pa.dictionary(pa.int32(), pa.string())
+
+    schema = combined.schema
+    new_fields = []
+    for field in schema:
+        if field.name in ["Name", "Category"]:
+            new_fields.append(pa.field(field.name, dict_type))
+        else:
+            new_fields.append(field)
+
+    new_schema = pa.schema(new_fields)
+    combined = combined.cast(new_schema)
+
     pq.write_table(combined, out_path)
-
-
-def combine_dataset_to_pq_pandas(root: str) -> None:
-    """
-    Load all csv files for the dataset, ands categorical columns, then
-    saves it to a single csv file.
-
-    :param root: Path to the dataset stored in the form train/ and test/
-    :type root: str
-    """
-    dfs = []
-    path = f"{root}/*/*.csv"
-    files = glob.glob(path, recursive=True)
-    out_path = f"{root}/combined_dataset.parquet"
-
-    for file in files:
-        name, category, attack = get_labels_from_filename(file)
-        df = pd.read_csv(file, low_memory=False)
-        df[["Name", "Category", "Attack"]] = [name, category, attack]
-
-        dfs.append(df)
-
-    combined_df = pd.concat(dfs, ignore_index=True)
-    combined_df.to_parquet(out_path, index=False, compression="snappy")
