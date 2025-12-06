@@ -24,13 +24,10 @@ if __name__ == "__main__":
     with pl.Config(tbl_rows=-1):
         print(counts)
 
-    # Converting to pandas df just for plotting, saves reworking entire plotting functionality
-    df_pd = df.to_pandas(use_pyarrow_extension_array=True)
-
     # Plots before preprocessing, entire dataset
-    plot_categories_no_ddos_dos_bar(df_pd, "AttackCatDistNoDosDDoS.png")
-    plot_attack_distribution_bar(df_pd, "AttackDistBar.png")
-    plot_ddos_dos_bar(df_pd, "DDoSDoSPlot.png")
-    plot_all_attack_categories_bar(df_pd, "AllAttackCategoryDistBar.png")
-    plot_attack_benign_pie(df_pd, "AttackBenignPie.png")
-    plot_correlation_heatmap(df_pd.sample(n=1000000), "CorrelationHeatmap.png")
+    plot_categories_no_ddos_dos_bar(df, "AttackCatDistNoDosDDoS.png")
+    plot_attack_distribution_bar(df, "AttackDistBar.png")
+    plot_ddos_dos_bar(df, "DDoSDoSPlot.png")
+    plot_all_attack_categories_bar(df, "AllAttackCategoryDistBar.png")
+    plot_attack_benign_pie(df, "AttackBenignPie.png")
+    plot_correlation_heatmap(df.sample(10000), "CorrelationHeatmap.png")
