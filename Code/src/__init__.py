@@ -9,6 +9,7 @@ from .visualisation import (
     plot_categories_no_ddos_dos_bar,
     plot_correlation_heatmap,
     plot_ddos_dos_bar,
+    plot_breakdown_pie,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "plot_categories_no_ddos_dos_bar",
     "plot_correlation_heatmap",
     "plot_ddos_dos_bar",
+    "plot_breakdown_pie",
 ]

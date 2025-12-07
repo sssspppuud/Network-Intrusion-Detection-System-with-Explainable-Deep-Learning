@@ -69,6 +69,16 @@ distribution is further broken down in the next sections.
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackDistBar.png}
     \caption{Bar chart showing the distribution of network traffic in the dataset.}
 \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackNamePieChart.png}
+    \caption{Pie chart showing the distribution of network traffic in the dataset.}
+    \label{fig:AttackNamePieChart}
+\end{figure}
+This class distribution becomes a problem when trying make a classifier that distinguishses between
+attack and benign traffic. However, when trying to classify the attack category or specific attack
+name, this becomes less of a problem. The distribution of specific attack names is much
+less imbalanced, shown in Fig.\ref{fig:AttackNamePieChart}.
 
 \section{Attack Categories}
 \subsection{All Attack Categories}
@@ -93,8 +103,8 @@ these categories seperated are shown in the next section.
     \caption{Counts of DDoS and DoS traffic instances.}
 \end{figure}
 
-To address the large class imbalance seen in \ref{fig:AttackBenignPie}, SMOTE will
-be used, before moving onto feature analysis.
+To address the large class imbalance seen in \ref{fig:AttackBenignPie}, undersampling 
+of the majority (Attack) class will be applied, before moving onto feature analysis.
 
 \newpage
 \section{Numerical Features}

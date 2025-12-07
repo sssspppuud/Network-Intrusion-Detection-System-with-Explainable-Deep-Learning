@@ -107,7 +107,7 @@ def plot_attack_benign_pie(df: pl.DataFrame, save_name: str | None = None):
         slices = attack_counts.values
         labels = attack_counts.index
 
-        colours = ["#B40000", "#13A300"]
+        colours = sns.color_palette("hsv", len(labels))
 
         fig, ax = plt.subplots(figsize=(10, 10))
         plt.pie(
@@ -124,7 +124,47 @@ def plot_attack_benign_pie(df: pl.DataFrame, save_name: str | None = None):
         ]
         plt.legend(
             legend_labels,
-            title="Traffic Type",
+            title="Malicious Traffic?",
+            loc="upper left",
+            bbox_to_anchor=(1.02, 1.0),
+        )
+
+        plt.gca().set_aspect("equal")
+
+        save_figure(fig, save_name)
+
+
+def plot_breakdown_pie(
+    df: pl.DataFrame, target_column: str, save_name: str | None = None
+):
+    if not plot_exists(save_name):
+        attack_counts = df.group_by(target_column).len().sort(target_column)
+        attack_counts = attack_counts.to_pandas()
+        attack_counts.columns = [target_column, "Count"]
+
+        attack_counts = attack_counts.set_index(target_column)["Count"]
+        total_count = attack_counts.sum()
+        percentages = (attack_counts / total_count) * 100
+        slices = attack_counts.values
+        labels = attack_counts.index
+
+        fig, ax = plt.subplots(figsize=(10, 10))
+        colours = sns.color_palette("hsv", len(labels))
+        plt.pie(
+            slices,  # pyright: ignore[reportArgumentType]
+            wedgeprops=dict(edgecolor="black", linewidth=1),
+            textprops=dict(color="white", fontsize=10),
+            startangle=90,
+            colors=colours,
+        )
+
+        legend_labels = [
+            f"{label} ({percentage:.2f}%)"
+            for label, percentage in zip(labels, percentages)
+        ]
+        plt.legend(
+            legend_labels,
+            title=f"Attack {target_column}",
             loc="upper left",
             bbox_to_anchor=(1.02, 1.0),
         )
