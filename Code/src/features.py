@@ -1,7 +1,6 @@
 import polars as pl
 import numpy as np
 from typing import Tuple
-from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
 def balance_dataset(df: pl.DataFrame, target_column: str) -> pl.DataFrame:
@@ -39,18 +38,6 @@ def seperate_features_and_labels(
     y = df.select(target_column).to_series().to_numpy()
     X = df.drop(valid_targets).to_numpy()
     return X, y
-
-
-def feature_scaling(X: np.ndarray):
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    return X_scaled
-
-
-def label_encoding(y: np.ndarray):
-    encoder = LabelEncoder()
-    y_encoded = encoder.fit_transform(y)
-    return y_encoded
 
 
 def feature_engineering(df: pl.DataFrame) -> pl.DataFrame:

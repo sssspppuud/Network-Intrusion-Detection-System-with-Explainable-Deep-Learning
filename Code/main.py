@@ -2,21 +2,13 @@ import polars as pl
 import seaborn as sns
 import matplotlib
 
-from config.settings import DATA_ROOT
-from src.dataset_management import combine_dataset_to_pq
-from src.visualisation import *
-from src.features import (
-    balance_dataset,
-    seperate_features_and_labels,
-    feature_scaling,
-    label_encoding,
-)
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+from src import *
 
 if __name__ == "__main__":
     # Loading dataset
-    if not os.path.exists(f"{DATA_ROOT}/combined_dataset.parquet"):
-        combine_dataset_to_pq(DATA_ROOT)
-    df = pl.read_parquet(f"{DATA_ROOT}/combined_dataset.parquet")
+    df = load_dataset("combined_dataset")
 
     # Optimising dataset in memory usage
     df = df.with_columns(pl.col(pl.Float64).cast(pl.Float32))
@@ -47,9 +39,11 @@ if __name__ == "__main__":
     df = balance_dataset(df, "Attack")
 
     # Data Transformation
-    X, y = seperate_features_and_labels(df, target_column="Category")
-    X = feature_scaling(X)
-    y = label_encoding(y)
+    X, y = seperate_features_and_labels(df, target_column="Attack")
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    encoder = LabelEncoder()
+    y = encoder.fit_transform(y)
 
-    plot_pca(X, y, "PCAPlot.png")
-    plot_umap(X, y, "UMAPPlot.png")
+    # plot_pca(X, y, "PCAPlot.png")
+    # plot_umap(X, y, "UMAPPlot.png")

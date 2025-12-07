@@ -1,11 +1,9 @@
 import glob
 from typing import Tuple
-
-import pyarrow as pa
-import pyarrow.csv as csv
-import pyarrow.parquet as pq
-
 import polars as pl
+import os
+
+from config.settings import DATA_ROOT
 
 
 def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
@@ -64,7 +62,7 @@ def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
     return "", "", False  # Should never reach here with correct dataset format
 
 
-def combine_dataset_to_pq(root: str) -> None:
+def combine_dataset_files(root: str, save_name: str = "combined_dataset") -> None:
     """
     Load all csv files for the dataset, ands categorical columns, then
     saves it to a single csv file.
@@ -74,7 +72,9 @@ def combine_dataset_to_pq(root: str) -> None:
     """
     path = f"{root}/*/*.csv"
     files = glob.glob(path, recursive=True)
-    out_path = f"{root}/combined_dataset.parquet"
+    combined_dir = os.path.join(root, "combined")
+    out_path = os.path.join(combined_dir, f"{save_name}.parquet")
+    os.makedirs(combined_dir, exist_ok=True)
 
     frames = []
     with pl.StringCache():
@@ -95,3 +95,10 @@ def combine_dataset_to_pq(root: str) -> None:
 
         combined_lf = pl.concat(frames)
         combined_lf.sink_parquet(out_path)
+
+
+def load_dataset(save_name: str) -> pl.DataFrame:
+    if not os.path.exists(f"{DATA_ROOT}/combined/{save_name}.parquet"):
+        combine_dataset_files(DATA_ROOT, save_name)
+    df = pl.read_parquet(f"{DATA_ROOT}/combined/{save_name}.parquet")
+    return df
