@@ -1,15 +1,20 @@
 import polars as pl
 import numpy as np
 import os
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib
 
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 import umap
-
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 from config.settings import FIGURES_ROOT
+
+sns.set_theme(style="darkgrid", context="paper", palette="bright")
+matplotlib.use("Agg")
 
 
 def plot_exists(save_name: str | None):
@@ -107,7 +112,7 @@ def plot_attack_benign_pie(df: pl.DataFrame, save_name: str | None = None):
         slices = attack_counts.values
         labels = attack_counts.index
 
-        colours = sns.color_palette("hsv", len(labels))
+        colours = sns.color_palette("tab20c", len(labels))
 
         fig, ax = plt.subplots(figsize=(10, 10))
         plt.pie(
@@ -122,7 +127,7 @@ def plot_attack_benign_pie(df: pl.DataFrame, save_name: str | None = None):
             f"{label} ({percentage:.2f}%)"
             for label, percentage in zip(labels, percentages)
         ]
-        plt.legend(
+        ax.legend(
             legend_labels,
             title="Malicious Traffic?",
             loc="upper left",
@@ -149,7 +154,7 @@ def plot_breakdown_pie(
         labels = attack_counts.index
 
         fig, ax = plt.subplots(figsize=(10, 10))
-        colours = sns.color_palette("hsv", len(labels))
+        colours = sns.color_palette("tab20c", len(labels))
         plt.pie(
             slices,  # pyright: ignore[reportArgumentType]
             wedgeprops=dict(edgecolor="black", linewidth=1),
@@ -162,7 +167,7 @@ def plot_breakdown_pie(
             f"{label} ({percentage:.2f}%)"
             for label, percentage in zip(labels, percentages)
         ]
-        plt.legend(
+        ax.legend(
             legend_labels,
             title=f"Attack {target_column}",
             loc="upper left",
@@ -204,28 +209,47 @@ def plot_correlation_heatmap(df: pl.DataFrame, save_name: str | None = None):
         save_figure(fig, save_name)
 
 
-def plot_pca(X: np.ndarray, y, save_name: str | None = None):
+def plot_pca(
+    X: np.ndarray, y, label_encoder: LabelEncoder, save_name: str | None = None
+):
     if not plot_exists(save_name):
-        temp_df = pl.DataFrame(X).with_columns(label=pl.Series(y))
-        sampled_df = temp_df.sample(n=100_000, seed=42)
-        X = sampled_df.drop("label").to_numpy()
-        y = sampled_df["label"].to_numpy()
-
+        _, X, _, y = train_test_split(X, y, test_size=0.1, random_state=42, stratify=y)
         pca = PCA(n_components=2, svd_solver="randomized", random_state=42)
         X_pca = pca.fit_transform(X)
 
-        df = pl.DataFrame({"PC1": X_pca[:, 0], "PC2": X_pca[:, 1], "label": y})
-        df = df.to_pandas()
-
         fig, ax = plt.subplots(figsize=(10, 8))
+        original_labels = label_encoder.classes_
+        unique_classes = np.unique(y)
+        cmap = plt.cm.get_cmap("Spectral", len(unique_classes))
 
-        sns.scatterplot(
-            data=df, x="PC1", y="PC2", hue="label", palette="Spectral", alpha=0.6, s=10
+        ax.scatter(
+            X_pca[:, 0],
+            X_pca[:, 1],
+            c=y,
+            cmap=cmap,
+            alpha=0.6,
+            s=10,
+            rasterized=True,
         )
-        ax.legend(loc="upper right")
+
+        legend_handles = []
+        legend_labels = []
+
+        for i, class_label in enumerate(unique_classes):
+            colour = cmap(i)
+            handle = ax.scatter([], [], c=[colour], label=class_label)
+            legend_handles.append(handle)
+            legend_labels.append(class_label)
+
+        ax.legend(
+            handles=legend_handles,
+            labels=original_labels.tolist(),
+            title="Attack Name",
+            loc="upper left",
+            bbox_to_anchor=(1.02, 1.0),
+        )
         ax.set_xlabel("Component 1")
         ax.set_ylabel("Component 2")
-        plt.legend(title="Class")
         save_figure(fig, save_name)
 
 

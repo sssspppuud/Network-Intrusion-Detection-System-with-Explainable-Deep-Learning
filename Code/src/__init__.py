@@ -10,6 +10,8 @@ from .visualisation import (
     plot_correlation_heatmap,
     plot_ddos_dos_bar,
     plot_breakdown_pie,
+    plot_pca,
+    plot_umap,
 )
 
 __all__ = [
@@ -24,4 +26,6 @@ __all__ = [
     "plot_correlation_heatmap",
     "plot_ddos_dos_bar",
     "plot_breakdown_pie",
+    "plot_pca",
+    "plot_umap",
 ]

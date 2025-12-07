@@ -1,22 +1,12 @@
-import polars as pl
-import seaborn as sns
-import matplotlib
-
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 from src import *
 
 if __name__ == "__main__":
-    # Loading dataset
     df = load_dataset("combined_dataset")
 
-    # Optimising dataset in memory usage
-    # df = df.with_columns(pl.col(pl.Float64).cast(pl.Float32))
-    # print(f"{df.estimated_size("gb"):.2f} GB")  # 1.53 to beat
-
-    # Exploratory Dataset Analysis
-    sns.set_theme(style="darkgrid", context="paper", palette="bright")
-    matplotlib.use("Agg")
+    # df = df.with_columns(pl.col(pl.Float64).cast(pl.Float32)) # Optimising dataset in memory usage
+    # print(f"{df.estimated_size("gb"):.2f} GB")
 
     # counts = (
     #     df.group_by(["Attack", "Category", "Name"]).len().sort("len", descending=True)
@@ -32,19 +22,37 @@ if __name__ == "__main__":
     plot_attack_benign_pie(df, "AttackBenignPie.png")
     plot_correlation_heatmap(df, "CorrelationHeatmap.png")
     plot_breakdown_pie(df, "Name", "AttackNamePieChart.png")
+
     # Data Cleaning
     df = df.drop_nulls()
     df = df.drop_nans()
 
     # df = balance_dataset(df, "Attack")
-    # plot_breakdown_pie(df, "Category", "CategoryPieChart_AfterBalancing.png")
 
     # Data Transformation
-    X, y = seperate_features_and_labels(df, target_column="Attack")
+    X1, y1 = seperate_features_and_labels(df, target_column="Attack")
     scaler = StandardScaler()
-    X = scaler.fit_transform(X)
+    X1 = scaler.fit_transform(X1)
     encoder = LabelEncoder()
-    y = encoder.fit_transform(y)
+    y1 = encoder.fit_transform(y1)
+    plot_pca(X1, y1, encoder, "PCAPlotAttack.png")
+    del X1
+    del y1
 
-    # plot_pca(X, y, "PCAPlot.png")
-    # plot_umap(X, y, "UMAPPlot.png")
+    X2, y2 = seperate_features_and_labels(df, target_column="Category")
+    scaler = StandardScaler()
+    X2 = scaler.fit_transform(X2)
+    encoder = LabelEncoder()
+    y2 = encoder.fit_transform(y2)
+    plot_pca(X2, y2, encoder, "PCAPlotCategory.png")
+    del X2
+    del y2
+
+    X3, y3 = seperate_features_and_labels(df, target_column="Name")
+    scaler = StandardScaler()
+    X3 = scaler.fit_transform(X3)
+    encoder = LabelEncoder()
+    y3 = encoder.fit_transform(y3)
+    plot_pca(X3, y3, encoder, "PCAPlotName.png")
+    del X3
+    del y3
