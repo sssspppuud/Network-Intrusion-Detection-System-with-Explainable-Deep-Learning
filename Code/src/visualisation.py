@@ -1,9 +1,13 @@
 import polars as pl
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-import seaborn as sns
 import numpy as np
+import os
+
+from sklearn.decomposition import PCA
+import umap
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 from config.settings import FIGURES_ROOT
 
@@ -135,6 +139,11 @@ def plot_correlation_heatmap(df: pl.DataFrame, save_name: str | None = None):
         numeric_data = df.select(
             pl.exclude("Attack", "Category", "Name").name.map(lambda name: name.lower())
         )
+
+        std_devs = numeric_data.select(pl.all().std())
+        zer_var_cols = [col for col in std_devs.columns if std_devs[col][0] == 0]
+        numeric_data = numeric_data.drop(zer_var_cols)
+
         corr = numeric_data.corr()
         corr_labels = corr.columns
         corr = corr.to_numpy()
@@ -152,4 +161,60 @@ def plot_correlation_heatmap(df: pl.DataFrame, save_name: str | None = None):
             yticklabels=corr_labels,
         )
 
+        save_figure(fig, save_name)
+
+
+def plot_pca(X: np.ndarray, y, save_name: str | None = None):
+    if not plot_exists(save_name):
+        temp_df = pl.DataFrame(X).with_columns(label=pl.Series(y))
+        sampled_df = temp_df.sample(n=100_000, seed=42)
+        X = sampled_df.drop("label").to_numpy()
+        y = sampled_df["label"].to_numpy()
+
+        pca = PCA(n_components=2, svd_solver="randomized", random_state=42)
+        X_pca = pca.fit_transform(X)
+
+        df = pl.DataFrame({"PC1": X_pca[:, 0], "PC2": X_pca[:, 1], "label": y})
+        df = df.to_pandas()
+
+        fig, ax = plt.subplots(figsize=(10, 8))
+
+        sns.scatterplot(
+            data=df, x="PC1", y="PC2", hue="label", palette="Spectral", alpha=0.6, s=10
+        )
+        ax.legend(loc="upper right")
+        ax.set_xlabel("Component 1")
+        ax.set_ylabel("Component 2")
+        plt.legend(title="Class")
+        save_figure(fig, save_name)
+
+
+def plot_umap(X: np.ndarray, y, save_name: str | None = None):
+    if not plot_exists(save_name):
+        temp_df = pl.DataFrame(X).with_columns(label=pl.Series(y))
+        sampled_df = temp_df.sample(n=10_000, seed=42)
+        X = sampled_df.drop("label").to_numpy()
+        y = sampled_df["label"].to_numpy()
+
+        reducer = umap.UMAP(n_components=2, n_neighbors=50, min_dist=0.4, n_jobs=-1)
+        X_umap = reducer.fit_transform(X)
+
+        df = pl.DataFrame({"UMAP1": X_umap[:, 0], "UMAP2": X_umap[:, 1], "label": y})  # type: ignore
+        df = df.to_pandas()
+
+        fig, ax = plt.subplots(figsize=(10, 8))
+
+        sns.scatterplot(
+            data=df,
+            x="UMAP1",
+            y="UMAP2",
+            hue="label",
+            palette="Spectral",
+            alpha=0.6,
+            s=10,
+        )
+        ax.legend(loc="upper right")
+        ax.set_xlabel("UMAP Component 1")
+        ax.set_ylabel("UMAP Component 2")
+        plt.legend(title="Class")
         save_figure(fig, save_name)
