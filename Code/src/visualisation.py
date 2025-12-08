@@ -7,7 +7,6 @@ import matplotlib
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 import umap
 
 
@@ -154,7 +153,7 @@ def plot_breakdown_pie(
         labels = attack_counts.index
 
         fig, ax = plt.subplots(figsize=(10, 10))
-        colours = sns.color_palette("tab20c", len(labels))
+        colours = sns.color_palette("tab20", len(labels))
         plt.pie(
             slices,  # pyright: ignore[reportArgumentType]
             wedgeprops=dict(edgecolor="black", linewidth=1),
@@ -213,14 +212,13 @@ def plot_pca(
     X: np.ndarray, y, label_encoder: LabelEncoder, save_name: str | None = None
 ):
     if not plot_exists(save_name):
-        _, X, _, y = train_test_split(X, y, test_size=0.1, random_state=42, stratify=y)
         pca = PCA(n_components=2, svd_solver="randomized", random_state=42)
         X_pca = pca.fit_transform(X)
 
         fig, ax = plt.subplots(figsize=(10, 8))
         original_labels = label_encoder.classes_
         unique_classes = np.unique(y)
-        cmap = plt.cm.get_cmap("Spectral", len(unique_classes))
+        cmap = plt.cm.get_cmap("tab10", len(unique_classes))
 
         ax.scatter(
             X_pca[:, 0],
@@ -253,32 +251,44 @@ def plot_pca(
         save_figure(fig, save_name)
 
 
-def plot_umap(X: np.ndarray, y, save_name: str | None = None):
+def plot_umap(
+    X: np.ndarray, y, label_encoder: LabelEncoder, save_name: str | None = None
+):
     if not plot_exists(save_name):
-        temp_df = pl.DataFrame(X).with_columns(label=pl.Series(y))
-        sampled_df = temp_df.sample(n=10_000, seed=42)
-        X = sampled_df.drop("label").to_numpy()
-        y = sampled_df["label"].to_numpy()
-
-        reducer = umap.UMAP(n_components=2, n_neighbors=50, min_dist=0.4, n_jobs=-1)
+        reducer = umap.UMAP(n_components=2, n_jobs=-1)
         X_umap = reducer.fit_transform(X)
 
-        df = pl.DataFrame({"UMAP1": X_umap[:, 0], "UMAP2": X_umap[:, 1], "label": y})  # type: ignore
-        df = df.to_pandas()
-
         fig, ax = plt.subplots(figsize=(10, 8))
+        original_labels = label_encoder.classes_
+        unique_classes = np.unique(y)
+        cmap = plt.cm.get_cmap("Spectral", len(unique_classes))
 
-        sns.scatterplot(
-            data=df,
-            x="UMAP1",
-            y="UMAP2",
-            hue="label",
-            palette="Spectral",
+        ax.scatter(
+            X_umap[:, 0],  # type: ignore
+            X_umap[:, 1],  # type: ignore
+            c=y,
+            cmap=cmap,
             alpha=0.6,
             s=10,
+            rasterized=True,
         )
-        ax.legend(loc="upper right")
+
+        legend_handles = []
+        legend_labels = []
+
+        for i, class_label in enumerate(unique_classes):
+            colour = cmap(i)
+            handle = ax.scatter([], [], c=[colour], label=class_label)
+            legend_handles.append(handle)
+            legend_labels.append(class_label)
+
+        ax.legend(
+            handles=legend_handles,
+            labels=original_labels.tolist(),
+            title="Attack Name",
+            loc="upper left",
+            bbox_to_anchor=(1.02, 1.0),
+        )
         ax.set_xlabel("UMAP Component 1")
         ax.set_ylabel("UMAP Component 2")
-        plt.legend(title="Class")
         save_figure(fig, save_name)

@@ -63,13 +63,6 @@ def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
 
 
 def combine_dataset_files(root: str, save_name: str = "combined_dataset") -> None:
-    """
-    Load all csv files for the dataset, ands categorical columns, then
-    saves it to a single csv file.
-
-    :param root: Path to the dataset stored in the form train/ and test/
-    :type root: str
-    """
     path = f"{root}/*/*.csv"
     files = glob.glob(path, recursive=True)
     combined_dir = os.path.join(root, "combined")
