@@ -6,7 +6,6 @@
 *.bbl
 *.blg
 *.bbl
-*.md
 .*.odt#
 .*.ods#
 *.docx
