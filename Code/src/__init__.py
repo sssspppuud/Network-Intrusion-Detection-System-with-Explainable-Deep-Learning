@@ -12,6 +12,7 @@ from .visualisation import (
     plot_breakdown_pie,
     plot_pca,
     plot_umap,
+    plot_tsne,
 )
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     "plot_breakdown_pie",
     "plot_pca",
     "plot_umap",
+    "plot_tsne",
 ]

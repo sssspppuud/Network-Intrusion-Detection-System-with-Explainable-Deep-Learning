@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 from sklearn.preprocessing import LabelEncoder
 import umap
 
@@ -101,7 +102,7 @@ def plot_all_attack_categories_bar(df: pl.DataFrame, save_name: str | None = Non
 
 def plot_attack_benign_pie(df: pl.DataFrame, save_name: str | None = None):
     if not plot_exists(save_name):
-        attack_counts = df.group_by("Attack").len()
+        attack_counts = df.group_by("Attack").len().sort("len", descending=False)
         attack_counts = attack_counts.to_pandas()
         attack_counts.columns = ["Attack", "Count"]
 
@@ -215,7 +216,7 @@ def plot_pca(
         pca = PCA(n_components=2, svd_solver="randomized", random_state=42)
         X_pca = pca.fit_transform(X)
 
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(12, 10))
         original_labels = label_encoder.classes_
         unique_classes = np.unique(y)
         cmap = plt.cm.get_cmap("tab10", len(unique_classes))
@@ -251,14 +252,74 @@ def plot_pca(
         save_figure(fig, save_name)
 
 
+def plot_tsne(
+    X: np.ndarray, y, label_encoder: LabelEncoder, save_name: str | None = None
+):
+    if not plot_exists(save_name):
+        tsne = TSNE(
+            n_components=2,
+            perplexity=40,
+            learning_rate=100,
+            random_state=42,
+            n_jobs=-1,
+            verbose=1,
+            init="pca",
+        )
+        X_tsne = tsne.fit_transform(X)
+
+        fig, ax = plt.subplots(figsize=(12, 10))
+        original_labels = label_encoder.classes_
+        unique_classes = np.unique(y)
+        cmap = plt.cm.get_cmap("tab10", len(unique_classes))
+
+        ax.scatter(
+            X_tsne[:, 0],
+            X_tsne[:, 1],
+            c=y,
+            cmap=cmap,
+            alpha=0.6,
+            s=10,
+            rasterized=True,
+        )
+
+        legend_handles = []
+        legend_labels = []
+
+        for i, class_label in enumerate(unique_classes):
+            colour = cmap(i)
+            handle = ax.scatter([], [], c=[colour], label=class_label)
+            legend_handles.append(handle)
+            legend_labels.append(class_label)
+
+        ax.legend(
+            handles=legend_handles,
+            labels=original_labels.tolist(),
+            title="Attack Name",
+            loc="upper left",
+            bbox_to_anchor=(1.02, 1.0),
+        )
+        ax.set_xlabel("Component 1")
+        ax.set_ylabel("Component 2")
+        save_figure(fig, save_name)
+
+
 def plot_umap(
     X: np.ndarray, y, label_encoder: LabelEncoder, save_name: str | None = None
 ):
     if not plot_exists(save_name):
-        reducer = umap.UMAP(n_components=2, n_jobs=-1)
+        # pca_reducer = PCA(n_components=20)
+        # X = pca_reducer.fit_transform(X)
+        reducer = umap.UMAP(
+            n_components=2,
+            n_jobs=-1,
+            n_neighbors=100,
+            min_dist=0.5,
+            set_op_mix_ratio=0.9,
+            verbose=True,
+        )
         X_umap = reducer.fit_transform(X)
 
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(12, 10))
         original_labels = label_encoder.classes_
         unique_classes = np.unique(y)
         cmap = plt.cm.get_cmap("Spectral", len(unique_classes))

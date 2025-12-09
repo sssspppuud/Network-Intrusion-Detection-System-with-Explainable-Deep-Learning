@@ -37,15 +37,15 @@ if __name__ == "__main__":
         "DDoS": 300_000,
         "DoS": 300_000,
         "MQTT": 150_000,
-        "Benign": 150_000,
+        # "Benign": 150_000,
     }
 
     rus = RandomUnderSampler(sampling_strategy=sampling_strategy, random_state=0)
     X, y = rus.fit_resample(X, y)
 
     df = pl.DataFrame(X)
-    df = df.with_columns(pl.Series("Name", y))
-    plot_breakdown_pie(df, "Name", "AttackCategoryPieChart_Resample.png")
+    df = df.with_columns(pl.Series("Category", y))
+    plot_breakdown_pie(df, "Category", "AttackCategoryPieChart_Resample.png")
     del df
 
     scaler = StandardScaler()
@@ -53,13 +53,13 @@ if __name__ == "__main__":
     encoder = LabelEncoder()
     y = encoder.fit_transform(y)
     _, X_sample, _, y_sample = train_test_split(
-        X, y, test_size=0.1, random_state=42, stratify=y
+        X, y, test_size=0.8, random_state=42, stratify=y
     )
-    plot_pca(X_sample, y_sample, encoder, "PCAPlotAttack.png")
+    # plot_pca(X_sample, y_sample, encoder, "PCAPlotAttack.png")
 
-    _, X_sample, _, y_sample = train_test_split(
-        X, y, test_size=0.01, random_state=42, stratify=y
-    )
-    plot_umap(X_sample, y_sample, encoder, "UMAPPlotAttack.png")
-
-    print(X.shape[0], len(y))
+    # _, X_sample, _, y_sample = train_test_split(
+    #     X, y, test_size=0.02, random_state=42, stratify=y
+    # )
+    # plot_umap(X_sample, y_sample, encoder, "UMAPPlotAttack.png")
+    # plot_tsne(X_sample, y_sample, encoder, "TSNEPlot.png")
+    # print(X.shape[0], len(y))

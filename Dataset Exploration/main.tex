@@ -69,16 +69,16 @@ distribution is further broken down in the next sections.
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackDistBar.png}
     \caption{Bar chart showing the distribution of network traffic in the dataset.}
 \end{figure}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{../Code/out/AttackNamePieChart.png}
-    \caption{Pie chart showing the distribution of network traffic in the dataset.}
-    \label{fig:AttackNamePieChart}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{../Code/out/AttackNamePieChart.png}
+%     \caption{Pie chart showing the distribution of network traffic in the dataset.}
+%     \label{fig:AttackNamePieChart}
+% \end{figure}
 This class distribution becomes a problem when trying make a classifier that distinguishses between
-attack and benign traffic. However, when trying to classify the attack category or specific attack
-name, this becomes less of a problem. The distribution of specific attack names is much
-less imbalanced, shown in Fig.\ref{fig:AttackNamePieChart}.
+attack and benign traffic. When trying to classify the attack category or specific attack
+name, this is also a problem. The distribution of specific attack names is much
+less imbalanced, shown in Fig.\ref{fig:AttackNamePieChart}, but still needs addressing.
 
 \section{Attack Categories}
 \subsection{All Attack Categories}
@@ -103,8 +103,22 @@ these categories seperated are shown in the next section.
     \caption{Counts of DDoS and DoS traffic instances.}
 \end{figure}
 
-To address the large class imbalance seen in \ref{fig:AttackBenignPie}, undersampling 
-of the majority (Attack) class will be applied, before moving onto feature analysis.
+\newpage
+
+\subsection{Addressing the Class Imbalance}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPieChart.png}
+    \caption{Pie chart showing attack category distribution, before undersampling.}
+\end{figure}
+Undersampling was then applied to the three larger classes (DDoS, DoS, and MQTT) this used imblearns RandomUnderSampler, with
+a sampling strategy that yielded the following, more balanced class distributions.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPieChart_Resample.png}
+    \caption{Pie chart showing attack category distribution, after undersampling.}
+\end{figure}
+
 
 \newpage
 \section{Numerical Features}
@@ -117,7 +131,7 @@ Dark blue meaning negatively correlated, and red meaning positively correlated.
     \caption{Correlation heatmap of numerical features in the dataset.}
 \end{figure}
 
-\url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10911967}
+% \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10911967}
 
 
 
