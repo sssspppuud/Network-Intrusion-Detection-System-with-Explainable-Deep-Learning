@@ -63,7 +63,7 @@ def get_labels_from_filename(filename: str) -> Tuple[str, str, bool]:
 
 
 def combine_dataset_files(root: str, save_name: str = "combined_dataset") -> None:
-    path = f"{root}/*/*.csv"
+    path = os.path.join(root,"*","*.csv")
     files = glob.glob(path, recursive=True)
     combined_dir = os.path.join(root, "combined")
     out_path = os.path.join(combined_dir, f"{save_name}.parquet")
@@ -91,7 +91,8 @@ def combine_dataset_files(root: str, save_name: str = "combined_dataset") -> Non
 
 
 def load_dataset(save_name: str) -> pl.DataFrame:
-    if not os.path.exists(f"{DATA_ROOT}/combined/{save_name}.parquet"):
+    path = os.path.join(DATA_ROOT, "combined", f"{save_name}.parquet")
+    if not os.path.exists(path):
         combine_dataset_files(DATA_ROOT, save_name)
-    df = pl.read_parquet(f"{DATA_ROOT}/combined/{save_name}.parquet")
+    df = pl.read_parquet(path)
     return df

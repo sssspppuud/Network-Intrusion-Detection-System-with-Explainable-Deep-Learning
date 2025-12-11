@@ -19,7 +19,6 @@ if __name__ == "__main__":
     )
     with pl.Config(tbl_rows=-1):
         print(counts)
-    counts.write_csv("./out/Dataset_Counts.csv")
 
     # EDA Plots
     plot_categories_no_ddos_dos_bar(df, "AttackCatDistNoDosDDoS.png")
@@ -53,18 +52,18 @@ if __name__ == "__main__":
 
     del df
 
-    # scaler = StandardScaler()
-    # X = scaler.fit_transform(X)
-    # encoder = LabelEncoder()
-    # y = encoder.fit_transform(y)
-    # _, X_sample, _, y_sample = train_test_split(
-    #     X, y, test_size=0.8, random_state=42, stratify=y
-    # )
-    # plot_pca(X_sample, y_sample, encoder, "PCAPlotAttack.png")
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    encoder = LabelEncoder()
+    y = encoder.fit_transform(y)
+    _, X_sample, _, y_sample = train_test_split(
+        X, y, test_size=0.8, random_state=42, stratify=y
+    )
+    plot_pca(X_sample, y_sample, encoder, "PCAPlotAttack.png")
 
-    # _, X_sample, _, y_sample = train_test_split(
-    #     X, y, test_size=0.02, random_state=42, stratify=y
-    # )
-    # plot_umap(X_sample, y_sample, encoder, "UMAPPlotAttack.png")
-    # plot_tsne(X_sample, y_sample, encoder, "TSNEPlot.png")
-    # print(X.shape[0], len(y))
+    _, X_sample, _, y_sample = train_test_split(
+        X, y, test_size=0.02, random_state=42, stratify=y
+    )
+    plot_umap(X_sample, y_sample, encoder, "UMAPPlotAttack.png")
+    plot_tsne(X_sample, y_sample, encoder, "TSNEPlot.png")
+    print(X.shape[0], len(y))
