@@ -22,6 +22,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage[section]{placeins}
+\usepackage{booktabs}
 
 \usepackage{hyperref}
 
@@ -63,22 +64,42 @@ distribution is further broken down in the next sections.
     \label{fig:AttackBenignPie}
 \end{figure}
 
+
+
+\newpage
+
 \section{Specific Attack Types}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{Attack?} & Category & Name                 & Count   \\ \hline
+true                          & DDoS     & DDoS\_UDP            & 1998026 \\ \hline
+true                          & DDoS     & DDoS\_ICMP           & 1887175 \\ \hline
+true                          & DDoS     & DDoS\_TCP            & 987063  \\ \hline
+true                          & DDoS     & DDoS\_SYN            & 974359  \\ \hline
+true                          & DoS      & DoS\_UDP             & 704503  \\ \hline
+true                          & DoS      & DoS\_SYN             & 540498  \\ \hline
+true                          & DoS      & DoS\_ICMP            & 514724  \\ \hline
+true                          & DoS      & DoS\_TCP             & 462480  \\ \hline
+false                         & Benign   & Benign               & 230339  \\ \hline
+true                          & MQTT     & DDoS\_Connect\_Flood & 214952  \\ \hline
+true                          & Recon    & Port\_Scan           & 106603  \\ \hline
+true                          & MQTT     & DoS\_Publish Flood   & 52881   \\ \hline
+true                          & MQTT     & DDoS\_Publish\_Flood & 36039   \\ \hline
+true                          & Recon    & OS\_Scan             & 20666   \\ \hline
+true                          & Spoofing & ARP\_Spoofing        & 17791   \\ \hline
+true                          & MQTT     & DoS\_Connect\_Flood  & 15904   \\ \hline
+true                          & MQTT     & Malformed\_Data      & 6877    \\ \hline
+true                          & Recon    & VulScan              & 3207    \\ \hline
+true                          & Recon    & Ping\_Sweep          & 926     \\ \hline
+\end{tabular}
+\end{table}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackDistBar.png}
     \caption{Bar chart showing the distribution of network traffic in the dataset.}
 \end{figure}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{../Code/out/AttackNamePieChart.png}
-%     \caption{Pie chart showing the distribution of network traffic in the dataset.}
-%     \label{fig:AttackNamePieChart}
-% \end{figure}
-This class distribution becomes a problem when trying make a classifier that distinguishses between
-attack and benign traffic. When trying to classify the attack category or specific attack
-name, this is also a problem. The distribution of specific attack names is much
-less imbalanced, shown in Fig.\ref{fig:AttackNamePieChart}, but still needs addressing.
 
 \section{Attack Categories}
 \subsection{All Attack Categories}
@@ -104,20 +125,33 @@ these categories seperated are shown in the next section.
 \end{figure}
 
 \newpage
-
-\subsection{Addressing the Class Imbalance}
+\section{Addressing the Class Imbalance}
+Undersampling was then applied to the three larger classes (DDoS, DoS, and MQTT) this used imblearns RandomUnderSampler, with
+a sampling strategy that yielded the following, more balanced class distributions.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPieChart.png}
     \caption{Pie chart showing attack category distribution, before undersampling.}
 \end{figure}
-Undersampling was then applied to the three larger classes (DDoS, DoS, and MQTT) this used imblearns RandomUnderSampler, with
-a sampling strategy that yielded the following, more balanced class distributions.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{../Code/out/AttackCategoryPieChart_Resample.png}
     \caption{Pie chart showing attack category distribution, after undersampling.}
 \end{figure}
+
+
+\begin{table}[]
+\begin{tabular}{@{}ll@{}}
+\toprule
+Category & Count  \\ \midrule
+DDoS     & 300000 \\
+DoS      & 300000 \\
+Benign   & 230339 \\
+MQTT     & 150000 \\
+Recon    & 131402 \\
+Spoofing & 17791  \\ \bottomrule
+\end{tabular}
+\end{table}
 
 
 \newpage
