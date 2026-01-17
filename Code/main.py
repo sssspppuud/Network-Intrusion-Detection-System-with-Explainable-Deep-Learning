@@ -2,6 +2,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from imblearn.under_sampling import RandomUnderSampler
 import polars as pl
+import numpy as np
 
 from src import *
 
@@ -42,6 +43,7 @@ if __name__ == "__main__":
 
     df_resampled = pl.DataFrame(X_resampled, schema=df.drop("Category").columns)
     df_resampled = df_resampled.with_columns(pl.Series("Category", y_resampled))
+
     plot_breakdown_pie(df_resampled, "Category", "AttackCategoryPieChart_Resample.png")
 
     counts = df_resampled.group_by("Category").len().sort("len", descending=True)
@@ -49,13 +51,21 @@ if __name__ == "__main__":
         print(counts)
 
     del df
+
     # Removing redundant features
-    #
+    corr_matrix = df_resampled.drop("Category").to_pandas().corr().abs()
+    upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+    to_drop = [column for column in upper.columns if any(upper[column] > 0.95)]
+    print(f"Dropping columns: {to_drop}")
+
+    df = df_resampled.drop(to_drop)
+    X = df.drop("Category").to_numpy()
+    y = df.select("Category").to_series().to_numpy()
 
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_resampled)
+    X_scaled = scaler.fit_transform(X)
     encoder = LabelEncoder()
-    y_encoded = encoder.fit_transform(y_resampled)
+    y_encoded = encoder.fit_transform(y)
     print(f"Encoded Labels: {encoder.classes_}")
 
     # ------------------
@@ -63,11 +73,11 @@ if __name__ == "__main__":
     _, X_sample, _, y_sample = train_test_split(
         X_scaled, y_encoded, test_size=0.8, random_state=42, stratify=y_resampled
     )
-    plot_pca(X_sample, y_sample, encoder, "PCAPlotAttack.png")
+    plot_pca(X_sample, y_sample, encoder, "PCAPlot.png")
     _, X_sample, _, y_sample = train_test_split(
         X_scaled, y_encoded, test_size=0.02, random_state=42, stratify=y_resampled
     )
-    plot_umap(X_sample, y_sample, encoder, "UMAPPlotAttack.png")
+    plot_umap(X_sample, y_sample, encoder, "UMAPPlot.png")
     plot_tsne(X_sample, y_sample, encoder, "TSNEPlot.png")
 
     # ----------------
@@ -82,3 +92,5 @@ if __name__ == "__main__":
     print(f"Training shape: {X_train.shape}")
     print(f"Validation shape: {X_val.shape}")
     print(f"Testing shape: {X_test.shape}")
+
+    build_dnn(1, 2)

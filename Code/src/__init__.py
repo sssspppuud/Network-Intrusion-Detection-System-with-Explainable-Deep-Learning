@@ -13,6 +13,8 @@ from .visualisation import (
     plot_tsne,
 )
 
+from .model_training import build_dnn
+
 __all__ = [
     "combine_dataset_files",
     "load_dataset",
@@ -26,4 +28,5 @@ __all__ = [
     "plot_pca",
     "plot_umap",
     "plot_tsne",
+    "build_dnn",
 ]
