@@ -1,6 +1,4 @@
-from .dataset_management import combine_dataset_files, load_dataset
-
-from .features import seperate_features_and_labels
+from .dataset_handling import combine_dataset_files, load_dataset
 
 from .visualisation import (
     plot_attack_distribution_bar,
@@ -18,7 +16,6 @@ from .visualisation import (
 __all__ = [
     "combine_dataset_files",
     "load_dataset",
-    "seperate_features_and_labels",
     "plot_attack_distribution_bar",
     "plot_all_attack_categories_bar",
     "plot_attack_benign_pie",
