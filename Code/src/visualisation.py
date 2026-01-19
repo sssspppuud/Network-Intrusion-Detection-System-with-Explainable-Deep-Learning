@@ -10,7 +10,6 @@ from sklearn.manifold import TSNE
 from sklearn.preprocessing import LabelEncoder
 import umap
 
-
 from config.settings import FIGURES_ROOT
 
 sns.set_theme(style="darkgrid", context="paper", palette="bright")
