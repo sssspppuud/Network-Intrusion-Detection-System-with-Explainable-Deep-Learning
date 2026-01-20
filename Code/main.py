@@ -67,5 +67,4 @@ if __name__ == "__main__":
     )
 
     print(f"Training shape: {X_train.shape}")
-    print(f"Validation shape: {X_val.shape}")
-    print(f"Testing shape: {X_test.shape}")
+    print(f"Testing shape: {X_test.shape}")  # 36 features
