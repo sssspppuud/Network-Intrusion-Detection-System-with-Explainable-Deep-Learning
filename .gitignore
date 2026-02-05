@@ -21,3 +21,5 @@ Examples
 *.pdf
 *.csv
 Code/model.keras
+Slides0502.odp
+.gitignore
