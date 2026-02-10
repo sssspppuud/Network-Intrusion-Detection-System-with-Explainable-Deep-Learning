@@ -23,3 +23,4 @@ Examples
 Code/model.keras
 Slides0502.odp
 .gitignore
+*.keras
