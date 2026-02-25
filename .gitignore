@@ -20,7 +20,6 @@ Reading
 Examples
 *.pdf
 *.csv
-Code/model.keras
 Slides0502.odp
 .gitignore
-Code/lime_explanation.html
+
