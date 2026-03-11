@@ -15,8 +15,8 @@
 *.parquet
 *.png
 __pycache__
-Other
-Reading
+Other/*
+Reading/*
 Examples
 *.pdf
 *.csv
