@@ -21,5 +21,7 @@ Examples
 *.pdf
 *.csv
 Slides0502.odp
-.gitignore
-
+artifacts/
+*.npy
+*.pkl
+model/*.csv
