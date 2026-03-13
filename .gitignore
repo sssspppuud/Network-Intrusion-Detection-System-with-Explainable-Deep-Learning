@@ -17,6 +17,7 @@ model/*.csv
 *.parquet
 
 *.png
+*.svg
 
 *.pdf
 *.docx

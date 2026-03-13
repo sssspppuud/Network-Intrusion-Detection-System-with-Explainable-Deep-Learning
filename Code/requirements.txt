@@ -31,3 +31,5 @@ tzdata==2025.2
 umap-learn==0.5.9.post2
 shap
 lime
+pydot
+graphviz
