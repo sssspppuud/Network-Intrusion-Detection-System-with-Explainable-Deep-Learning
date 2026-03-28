@@ -1,0 +1,165 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- Packages ---
+\usepackage[margin=2cm]{geometry} % 2cm margins as per specification
+\usepackage{setspace}
+\singlespacing % Single line spacing as per specification
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{caption}
+
+% Set minimum font size for captions/tables to 9pt
+\captionsetup{font=small} % 'small' is typically 9pt or 10pt in an 11pt document
+
+\begin{document}
+
+% ==========================================
+% TITLE PAGE
+% ==========================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge \bfseries Integrating Explainable AI with Deep Learning for Intrusion Detection in IoMT Networks\par}
+    \vspace{1.5cm}
+
+    {\Large \bfseries Ralph Lickley\par}
+    \vspace{0.5cm}
+    {\large Student ID: 730030331\par} % Update if necessary
+    \vspace{2cm}
+
+    {\Large \bfseries Abstract\par}
+    \vspace{0.5cm}
+    \begin{minipage}{0.85\textwidth}
+        % SPECIFICATION NOTE: Abstract must be 200-250 words.
+        % Briefly summarise the context (IoMT security), the problem (black-box ML models), 
+        % the proposed solution (DNN + LIME/SHAP), the methodology (CIC2024 IoMT Dataset), 
+        % and your key findings/results.
+        [Insert your 200-250 word abstract here.]
+    \end{minipage}
+
+    \vfill
+
+    {\Large \bfseries Declaration\par}
+    \vspace{0.5cm}
+    \begin{minipage}{0.85\textwidth}
+        \centering
+        \textit{I certify that all material in this dissertation which is not my own work has been identified.}
+
+        \vspace{1cm}
+        Signed: \textbf{Ralph James Lickley} \\
+        Date: \today
+    \end{minipage}
+
+    \vspace{2cm}
+\end{titlepage}
+
+% ==========================================
+% TABLE OF CONTENTS
+% ==========================================
+\newpage
+\tableofcontents
+\newpage
+
+% ==========================================
+% BODY OF REPORT (Max 20 Pages from here to Bibliography)
+% ==========================================
+
+% --- 1. INTRODUCTION, MOTIVATION, AND AIMS (10%) ---
+% SPECIFICATION NOTE: Introduction and background combined must be NO MORE than 2 pages.
+\section{Introduction, Motivation, and Aims}
+
+\subsection{Project Motivation and Context}
+% Introduce the rise of IoMT, patient data/safety risks, and the need for Intrusion Detection Systems (IDS). 
+% Explain the "black-box" problem of Deep Learning and why Explainable AI (XAI) is critical for medical professional trust.
+
+\subsection{Aims and Objectives}
+% Clearly state your aims (Measurable and well-defined). 
+% E.g., Implement a DNN on the CIC2024 IoMT dataset, address class imbalances, and apply LIME/SHAP.
+
+\subsection{Background Summary}
+% Do not reproduce your literature review verbatim. Briefly summarise:
+% 1. IoMT vulnerabilities.
+% 2. Machine learning for IDS.
+% 3. The role of XAI (LIME and SHAP).
+
+
+% --- 2. DESIGN, METHODS, AND IMPLEMENTATION (30%) ---
+\section{Design, Methods, and Implementation}
+
+\subsection{Dataset Selection and Preprocessing}
+% Discuss the CIC2024 IoMT Dataset. Explain your data cleaning, encoding of attack types, 
+% and how you handled the massive DDoS/DoS class imbalance (e.g., using SMOTE).
+
+\subsection{Deep Neural Network (DNN) Architecture}
+% Detail the design choices of your DNN. 
+% Justify your hyperparameter tuning process and success criteria.
+
+\subsection{Integration of Explainable AI (XAI)}
+% Explain how you integrated LIME and SHAP into the pipeline. 
+% Detail the methods used to extract feature importance.
+
+\subsection{Resource Utilisation and Tools}
+% Briefly describe the libraries (e.g., TensorFlow, PyTorch, scikit-learn), hardware, and environments used.
+
+
+% --- 3. RESULTS, EVALUATION, AND TESTING (30%) ---
+\section{Results, Evaluation, and Testing}
+
+\subsection{Experimental Setup and Success Criteria}
+% Reiterate the goal (e.g., F1-score >= 0.80) and how testing was conducted.
+
+\subsection{DNN Intrusion Detection Performance}
+% Present your classification results. Use legible tables and figures (min 9pt font).
+% Discuss F1-score, Precision, Recall, and overall accuracy across the multi-class dataset.
+% Compare against baselines (e.g., the Random Forest benchmark from the original CIC2024 paper).
+
+\subsection{XAI Interpretability Validation}
+% Present the output from LIME and SHAP. 
+% Do they identify the same features for specific attacks? 
+% Are the highlighted features logical for the attack type (e.g., DoS attack features)?
+
+
+% --- 4. REFLECTION, CONCLUSION, AND PRESENTATION (30%) ---
+\section{Reflection and Conclusion}
+
+\subsection{Critical Analysis of Results}
+% Interpret what your results mean. How successfully did you bridge the gap between high accuracy and interpretability?
+
+\subsection{Project Reflection}
+% Fairly examine both the strengths and weaknesses of the project. 
+% Discuss project management (referencing your Gantt chart methodology), what went wrong, and how you adapted.
+
+\subsection{Future Work}
+% Suggest well-articulated future directions (e.g., testing on real-time hardware, trying different XAI methods).
+
+\subsection{Conclusion}
+% Final wrap-up of the project's achievements against the original objectives.
+
+
+% ==========================================
+% BIBLIOGRAPHY
+% ==========================================
+\newpage
+% SPECIFICATION NOTE: Must be at least 11pt font. Will likely take 0.5 to 3 pages.
+\bibliographystyle{ieeetr} % Or whichever referencing style you prefer (e.g., apa, plain)
+\begin{thebibliography}{99}
+
+    \bibitem{cic2024}
+    S. Dadkhah et al., ``CICIOMT2024: A benchmark dataset for multi-protocol security assessment in IoMT,'' \textit{Internet of Things}, vol. 28, p. 101351, 2024.
+
+    % Add your other references here, or use \bibliography{references} if using a .bib file.
+
+\end{thebibliography}
+
+% ==========================================
+% APPENDICES (Optional - Does not count towards 20-page limit)
+% ==========================================
+\newpage
+\appendix
+\section{Supplementary Diagrams and Code Snippets}
+% Use this for extra experimental data, larger diagrams, or system architecture charts 
+% that are not strictly necessary for the main narrative but provide completeness.
+
+\end{document}
