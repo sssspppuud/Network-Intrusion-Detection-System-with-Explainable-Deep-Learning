@@ -1,75 +1,89 @@
-\documentclass[11pt, a4paper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                     %   
+%    LateX template for UG final report                               %
+%    Z. Wang 
+%    Feb 2025
+%    Updated on March 2026
+%    University of Exeter                                             %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,a4paper]{article}
 
-% --- Packages ---
-\usepackage[margin=2cm]{geometry} % 2cm margins as per specification
-\usepackage{setspace}
-\singlespacing % Single line spacing as per specification
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{geometry}
 \usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{titlesec}
-\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{titlesec} 
 
-% Set minimum font size for captions/tables to 9pt
-\captionsetup{font=small} % 'small' is typically 9pt or 10pt in an 11pt document
+% set table of content depth
+\setcounter{tocdepth}{3} 
+\usepackage[titles]{tocloft}
 
+% set spacing 
+\setlength{\cftbeforesecskip}{10pt}
+
+% unticked checkbox
+\newlist{checkbox}{itemize}{2}
+\setlist[checkbox]{label=$\square$}
+% ticked checkbox
+\newlist{checkbox_t}{itemize}{2}
+\setlist[checkbox_t]{label=$\text{\rlap{$\checkmark$}}\square$}
+
+% Page layout settings
+\geometry{
+    a4paper,
+    left=20mm,
+    right=20mm,
+    top=25mm,
+    bottom=25mm
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+\singlespacing  % Set the document to single line spacing
+\thispagestyle{empty} % remove page number for the cover page
 
-% ==========================================
-% TITLE PAGE
-% ==========================================
-\begin{titlepage}
-    \centering
-    \vspace*{2cm}
+\begin{center}
+    {\bf \LARGE Title of Your Project Topic}\\[0.5cm]
+    \textbf{Ralph Lickley} \\[0.2cm]
+    \textbf{Student ID:} 730030331 \\[1cm]
+    \textbf{Email:} rl665@exeter.ac.uk \\[1cm]
+\end{center}
 
-    {\Huge \bfseries Integrating Explainable AI with Deep Learning for Intrusion Detection in IoMT Networks\par}
-    \vspace{1.5cm}
+\section*{Abstract}
 
-    {\Large \bfseries Ralph Lickley\par}
-    \vspace{0.5cm}
-    {\large Student ID: 730030331\par} % Update if necessary
-    \vspace{2cm}
+\noindent
+This should be 200-250 word.
+Cras laoreet eros a elit vehicula semper. Phasellus vitae condimentum felis. Suspendisse potenti. Suspendisse purus velit, convallis at bibendum sit amet, feugiat ut nulla. Vestibulum nec pharetra elit, vitae sodales enim. Maecenas tempor nisi quis posuere convallis. Sed fermentum rhoncus gravida. In pellentesque elementum enim, tristique ultrices lacus. Nunc scelerisque a nunc efficitur consectetur. Vivamus in quam quis sapien ullamcorper venenatis. In vestibulum sem orci. In hac habitasse platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque dictum ornare metus, eu pellentesque quam luctus at.
 
-    {\Large \bfseries Abstract\par}
-    \vspace{0.5cm}
-    \begin{minipage}{0.85\textwidth}
-        % SPECIFICATION NOTE: Abstract must be 200-250 words.
-        % Briefly summarise the context (IoMT security), the problem (black-box ML models), 
-        % the proposed solution (DNN + LIME/SHAP), the methodology (CIC2024 IoMT Dataset), 
-        % and your key findings/results.
-        [Insert your 200-250 word abstract here.]
-    \end{minipage}
+\vspace*{\fill}
 
-    \vfill
+\begin{checkbox}
+    % \item {\bf I have not used any GenAI tools in preparing this assessment.}
+    \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
+\end{checkbox}
 
-    {\Large \bfseries Declaration\par}
-    \vspace{0.5cm}
-    \begin{minipage}{0.85\textwidth}
-        \centering
-        \textit{I certify that all material in this dissertation which is not my own work has been identified.}
-
-        \vspace{1cm}
-        Signed: \textbf{Ralph James Lickley} \\
-        Date: \today
-    \end{minipage}
-
-    \vspace{2cm}
-\end{titlepage}
-
-% ==========================================
-% TABLE OF CONTENTS
-% ==========================================
+\vspace{1em}
+{\bf\noindent Signature:} \hrulefill
 \newpage
+
+% table of contents
 \tableofcontents
+\thispagestyle{empty}
 \newpage
 
-% ==========================================
-% BODY OF REPORT (Max 20 Pages from here to Bibliography)
-% ==========================================
+% reset page number
+\clearpage
 
-% --- 1. INTRODUCTION, MOTIVATION, AND AIMS (10%) ---
-% SPECIFICATION NOTE: Introduction and background combined must be NO MORE than 2 pages.
+\pagenumbering{arabic}
 \section{Introduction, Motivation, and Aims}
-
 \subsection{Introduction}
 The Internet of Medical Things (IoMT) is a subset of the Internet of Things, which is constrained to smart medical equipment
 used to monitor patient's health and assist in providing healthcare. For example, devices such as cardiovascular monitors,
@@ -87,6 +101,12 @@ network traffic to identify malicious activity. However, the lack of interpretab
 systems limits the widespread adoption, especially in healthcare setting where the safety and privacy of both patients and staff
 are critical. To address this lack of interpretability in more complex models, this project focuses on this critical gap by developing
 a Deep Neural Network (DNN) IDS, and uses Explainable Artificial Intelligence (XAI) techniques to verify the performance and accuracy of the model.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Section 2
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Motivation}
 The main motivation behind this project is the requirement for transparency in safety critical systems. Current ML-based
 IDS show solid performance, the reasons for decisions they make are still very unclear, this reduces adoption in critical medical
@@ -111,81 +131,35 @@ The four primary objectives of this project are:
     \item Apply XAI techniques, to identify the features of network traffic which the model uses the most, as well as how different values influence the models' decisions.
     \item Critically evaluate the results from the XAI techniques, ensuring that the results align with known attack signatures and are logical.
 \end{itemize}
-\subsection{Background Summary}
-% Do not reproduce your literature review verbatim. Briefly summarise:
-% 1. IoMT vulnerabilities.
-% 2. Machine learning for IDS.
-% 3. The role of XAI (LIME and SHAP).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Another section
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% --- 2. DESIGN, METHODS, AND IMPLEMENTATION (30%) ---
-\section{Design, Methods, and Implementation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Conclusions
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Dataset Selection and Preprocessing}
-% Discuss the CIC2024 IoMT Dataset. Explain your data cleaning, encoding of attack types, 
-% and how you handled the massive DDoS/DoS class imbalance (e.g., using SMOTE).
-
-\subsection{Deep Neural Network (DNN) Architecture}
-% Detail the design choices of your DNN. 
-% Justify your hyperparameter tuning process and success criteria.
-
-\subsection{Integration of Explainable AI (XAI)}
-% Explain how you integrated LIME and SHAP into the pipeline. 
-% Detail the methods used to extract feature importance.
-
-\subsection{Resource Utilisation and Tools}
-% Briefly describe the libraries (e.g., TensorFlow, PyTorch, scikit-learn), hardware, and environments used.
-
-
-% --- 3. RESULTS, EVALUATION, AND TESTING (30%) ---
-\section{Results, Evaluation, and Testing}
-
-\subsection{Experimental Setup and Success Criteria}
-% Reiterate the goal (e.g., F1-score >= 0.80) and how testing was conducted.
-
-\subsection{DNN Intrusion Detection Performance}
-% Present your classification results. Use legible tables and figures (min 9pt font).
-% Discuss F1-score, Precision, Recall, and overall accuracy across the multi-class dataset.
-% Compare against baselines (e.g., the Random Forest benchmark from the original CIC2024 paper).
-
-\subsection{XAI Interpretability Validation}
-% Present the output from LIME and SHAP. 
-% Do they identify the same features for specific attacks? 
-% Are the highlighted features logical for the attack type (e.g., DoS attack features)?
-
-
-% --- 4. REFLECTION, CONCLUSION, AND PRESENTATION (30%) ---
-\section{Reflection and Conclusion}
-
-\subsection{Critical Analysis of Results}
-% Interpret what your results mean. How successfully did you bridge the gap between high accuracy and interpretability?
-
-\subsection{Project Reflection}
-% Fairly examine both the strengths and weaknesses of the project. 
-% Discuss project management (referencing your Gantt chart methodology), what went wrong, and how you adapted.
-
-\subsection{Future Work}
-% Suggest well-articulated future directions (e.g., testing on real-time hardware, trying different XAI methods).
-
-\subsection{Conclusion}
-% Final wrap-up of the project's achievements against the original objectives.
-
-
-% ==========================================
-% BIBLIOGRAPHY
-% ==========================================
 \newpage
-% SPECIFICATION NOTE: Must be at least 11pt font. Will likely take 0.5 to 3 pages.
+\addcontentsline{toc}{section}{References} % add References to contents line
+
+\newpage
 \bibliographystyle{IEEEtran}
-\bibliography{references.bib}
+\bibliography{main.bib}
 
-% ==========================================
-% APPENDICES (Optional - Does not count towards 20-page limit)
-% ==========================================
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Appendices
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-\section{Supplementary Diagrams and Code Snippets}
-% Use this for extra experimental data, larger diagrams, or system architecture charts 
-% that are not strictly necessary for the main narrative but provide completeness.
+\section*{Appendix A}
+\addcontentsline{toc}{section}{Appendix A} % add Appendix A to contents line
 
 \end{document}
+
