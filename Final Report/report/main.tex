@@ -70,14 +70,32 @@
 % SPECIFICATION NOTE: Introduction and background combined must be NO MORE than 2 pages.
 \section{Introduction, Motivation, and Aims}
 
-\subsection{Project Motivation and Context}
-% Introduce the rise of IoMT, patient data/safety risks, and the need for Intrusion Detection Systems (IDS). 
-% Explain the "black-box" problem of Deep Learning and why Explainable AI (XAI) is critical for medical professional trust.
-
-\subsection{Aims and Objectives}
-% Clearly state your aims (Measurable and well-defined). 
-% E.g., Implement a DNN on the CIC2024 IoMT dataset, address class imbalances, and apply LIME/SHAP.
-
+\subsection{Introduction}
+The Internet of Medical Things (IoMT) is a subset of the Internet of Things, which is constrained to smart medical equipment
+used to monitor patient's health and assist in providing healthcare. For example, devices such as cardiovascular monitors,
+temperature trackers, and continuous glucose monitors can all be integrated into the delivery of healthcare. Using these devices
+to continuously monitor patients allows healthcare professionals to make more informed decisions for diagnosis and treatment plans.
+For example, data derived from IoMT devices has successfully been used to predict the risk people have for heart disease \cite{baseer2024healthcare}.
+However, the rapid expansion of IoMT systems has also lead to the attack surface becoming much larger in critical medical
+infrastructure. According to the HIPAA Journals' report, during 2025 there were 710 healthcare data breaches, each of
+which affecting over 500 people \cite{hipaajournal}. This, alongside the highly sensitive nature of patient's medical data, creates large concerns
+over the privacy and handling of patients' data, as well as their safety, given that the equipment used to provide treatment
+is now becoming highly interconnected in IoMT. Traditional, signature-based Intrusion Detection Systems (IDS) often fail to detect more
+modern, unknown attack signatures, this has lead to Machine Learning (ML) based IDS to becoming a
+key area of recent research in network intrusion detection. ML based IDS are able to recognise the complex patterns found in
+network traffic to identify malicious activity. However, the lack of interpretability of these ML based
+systems limits the widespread adoption, especially in healthcare setting where the safety and privacy of both patients and staff
+are critical. To address this lack of interpretability in more complex models, this project focuses on this critical gap by developing
+a Deep Neural Network (DNN) IDS, and uses Explainable Artificial Intelligence (XAI) techniques to verify the performance and accuracy of the model.
+\subsection{Motivation}
+The main motivation behind this project is the requirement for transparency in safety critical systems. Current ML-based
+IDS show solid performance, the reasons for decisions they make are still very unclear, this reduces adoption in critical medical
+environments because and incorrect classification could lead to disruptions in healthcare delivery, or breaches of patients data.
+Existing IDS studies rely on the use of general IoT datasets for training the models, these do not reflect the unique traffic patterns
+which are found in IoMT networks, such as the use of lightweight protocols like MQTT. This project uses the CIC2024 IoMT Dataset, this dataset
+has been specifically created to benchmark and train IDS for IoMT traffic, it has been generated using traffic collected from real IoMT devices.
+Although XAI techniques such as SHAP and LIME have been used in general network security applications, there has been little research applying these
+techniques specifically to IoMT scenarios, this project aims to focus on that gap.
 \subsection{Background Summary}
 % Do not reproduce your literature review verbatim. Briefly summarise:
 % 1. IoMT vulnerabilities.
@@ -143,15 +161,8 @@
 % ==========================================
 \newpage
 % SPECIFICATION NOTE: Must be at least 11pt font. Will likely take 0.5 to 3 pages.
-\bibliographystyle{ieeetr} % Or whichever referencing style you prefer (e.g., apa, plain)
-\begin{thebibliography}{99}
-
-    \bibitem{cic2024}
-    S. Dadkhah et al., ``CICIOMT2024: A benchmark dataset for multi-protocol security assessment in IoMT,'' \textit{Internet of Things}, vol. 28, p. 101351, 2024.
-
-    % Add your other references here, or use \bibliography{references} if using a .bib file.
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{references.bib}
 
 % ==========================================
 % APPENDICES (Optional - Does not count towards 20-page limit)
