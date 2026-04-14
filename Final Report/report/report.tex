@@ -1,0 +1,171 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                     %   
+%    LateX template for UG final report                               %
+%    Z. Wang 
+%    Feb 2025
+%    Updated on March 2026
+%    University of Exeter                                             %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{titlesec} 
+
+% set table of content depth
+\setcounter{tocdepth}{3} 
+\usepackage[titles]{tocloft}
+
+% set spacing 
+\setlength{\cftbeforesecskip}{10pt}
+
+% unticked checkbox
+\newlist{checkbox}{itemize}{2}
+\setlist[checkbox]{label=$\square$}
+% ticked checkbox
+\newlist{checkbox_t}{itemize}{2}
+\setlist[checkbox_t]{label=$\text{\rlap{$\checkmark$}}\square$}
+
+% Page layout settings
+\geometry{
+    a4paper,
+    left=20mm,
+    right=20mm,
+    top=25mm,
+    bottom=25mm
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\singlespacing  % Set the document to single line spacing
+\thispagestyle{empty} % remove page number for the cover page
+
+\begin{center}
+    {\bf \LARGE Title of Your Project Topic}\\[0.5cm]
+    \textbf{Your Name} \\[0.2cm]
+    \textbf{Student ID:} 12345678 \\[1cm]
+    % \textbf{Email:} youremail@exeter.ac.uk \\[1cm]
+\end{center}
+
+\section*{Abstract}
+
+\noindent
+This should be 200-250 word.
+Cras laoreet eros a elit vehicula semper. Phasellus vitae condimentum felis. Suspendisse potenti. Suspendisse purus velit, convallis at bibendum sit amet, feugiat ut nulla. Vestibulum nec pharetra elit, vitae sodales enim. Maecenas tempor nisi quis posuere convallis. Sed fermentum rhoncus gravida. In pellentesque elementum enim, tristique ultrices lacus. Nunc scelerisque a nunc efficitur consectetur. Vivamus in quam quis sapien ullamcorper venenatis. In vestibulum sem orci. In hac habitasse platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque dictum ornare metus, eu pellentesque quam luctus at.
+
+\vspace*{\fill}
+
+\begin{checkbox}
+    % \item {\bf I have not used any GenAI tools in preparing this assessment.}
+    \item {\bf I certify that all material in this dissertation which is not my own has been identified.}
+\end{checkbox}
+
+\vspace{1em}
+{\bf\noindent Signature:} \hrulefill
+\newpage
+
+% table of contents
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+% reset page number
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction, Motivation, and Aims}
+\subsection{Motivation}
+The use of smart and connected medical devices has rapidly made it's way into
+the delivery of various healthcare services, leading to the rapid expansion of the
+Internet of Medical Things (IoMT). This subset of the Internet of Things (IoT)
+includes many medical devices such as remote heart rate monitors, temperature
+trackers, and continuous glucose monitors, which can all be connected and used by
+healthcare professionals to keep track of patients health and wellbeing.
+Using IoMT devices allows healthcare professionals to continuously monitor patients
+to make more informed decisions for diagnosis and treatment plans. For example,
+data derived from IoMT devices was successfully used to predict the risk
+patients have for developing heart disease \cite{baseer2024healthcare}.
+However, alongside the rapid integration of IoMT technology into healthcare delivery,
+the attack surface of healthcare infrastructure to also significantly expanded. By the
+end of 2025, there had been 710 recorded healthcare data breaches, each of which
+affecting over 500 people \cite{hipaajournal}. These breaches impacted millions of
+patients, exposing sensitive medical records and other user data.
+\newline
+Within this rapidly evolving landscape, new vulnerabilities and cyber attacks
+become major threats toward IoMT networks. Defenses such as firewalls alone
+are no longer enough to ensure the security of these networks, requiring the use of
+an Intrusion Detection System (IDS) to flag malicious network activity missed by the
+firewall.
+
+Traditional, signature-based IDSs often fail to detect more modern, unknown attack
+signatures, leading to Machine Learning (ML) based IDSs becoming a key area of recent
+research in network intrusion detection. ML based IDSs are able to recognise the
+complex patterns found in network traffic to identify malicious activity, instead of
+simple rule based systems. However, the lack of interpretability of these ML based
+systems limits the widespread adoption, especially in healthcare setting where the
+safety and privacy of both patients and staff are critical. To address this lack of
+interpretability in more complex models, this project focuses on this critical gap by
+developing a Deep Neural Network (DNN) IDS, and uses Explainable Artificial
+Intelligence (XAI) techniques to verify the performance and accuracy of the model.
+
+\subsection{Aims and Objectives}
+
+\section{Background}
+\subsection{Current State of IoMT IDS}
+\subsection{The Role of XAI in Healthcare}
+
+\section{Design and Methodology}
+\subsection{Success Criteria}
+\subsection{System Architecture}
+\subsection{Design Choices}
+\subsection{Development Methodology}
+
+\section{Implementation}
+\subsection{Data Pre-processing}
+\subsection{DNN Implementation}
+\subsection{XAI Integration}
+
+\section{Results, Testing, and Evaluation}
+\subsection{Model Performance}
+\subsection{Comparative Analysis}
+\subsection{XAI Evaluation}
+
+\section{Reflection and Conclusion}
+\subsection{Critical Reflection}
+\subsection{Conclusion}
+\subsection{Future Directions}
+
+
+
+
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    REFERENCES
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{IEEEtran}
+\bibliography{main.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Appendices
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\section*{Appendix A}
+\addcontentsline{toc}{section}{Appendix A} % add Appendix A to contents line
+
+\end{document}
