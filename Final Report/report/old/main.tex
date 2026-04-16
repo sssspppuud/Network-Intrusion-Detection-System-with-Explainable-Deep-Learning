@@ -136,10 +136,27 @@ The four primary objectives of this project are:
 
 \newpage
 \section{Background}
-Summarise the literature review here.
+Recent research has shown that tradiditional methods used for intrusion detection systems
+are insufficient when applied to IoT and subsequently IoMT scenarios. IoMT networks use
+protocols like MQTT and Bluetooth to communicate between the lightweight devices on
+the network [reference here]. Machine learning models provide more robust attack
+detection than signature based methods, as they are able to handle the complex nature
+of network traffic data. However, the powerful deep learning models used in these IDSs
+lack interpretability, leaving a critical gap which prevents widespread adoption in
+medical settings where false alarms and missed attacks could disrupt a patients care.
 
 \newpage
 \section{Design, Methods and Implementation}
+\subsection{Success Criteria}
+The model should achieve an average F1-score of $\geq$ 0.8 on the CIC2024 IoMT testing
+set. XAI techniques must show that the model successfully idnetifies logical features
+and patterns in the data, such as a high packet rate for DDoS or DoS, these results
+should align with cybersecurity knowledge of network attacks.
+\subsection{Pipeline Architecture}
+Firstly, the dataset will be preprocessed to ensure it is suitable for model training.
+Next, a multilayer Deep Neural Network (DNN) will be trained on the training set to
+classify network traffic type. Finally, the explainability analysis will be applied
+using SHAP to interpret the outputs of the model on the testing set.
 \begin{itemize}
     \item Design choices
     \item Resources used
