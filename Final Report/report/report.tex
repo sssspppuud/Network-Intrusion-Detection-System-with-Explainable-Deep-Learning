@@ -175,6 +175,25 @@ The model implemented in this project was a Deep Neural Network (DNN), this mode
 To train and benchmark the model implemented in this project, the CIC2024 IoMT dataset will be used, this was chosen over other commonly used IoT network traffic datasets such as the NSL-KDD and CICIDS2017. The CIC2024 IoMT dataset was specifically made to capture realistic traffic flows found in IoMT networks, it uses common protocols used by IoMT devices such as MQTT, Bluetooth, and Wi-Fi, which are not as common in these other datasets. It also simulates 18 different attack types which are focused on 40 simulated IoMT devices, making the attack surface large and varied. Finally, the dataset is easily accessible online for reproducing the results, it also does not contain any personal patient data or medical information, ensuring there are no ethical concerns with data privacy. Prior to applying any sampling pipelines or training the model, the dataset is split into training, validation, and testing sets, with 80% in the training set and 10% in both validation and testing sets.
 \subsubsection{Class Imbalance Fix}
 The CIC2024 IoMT dataset has 6 categories of network traffic: Benign, DDoS, DoS, MQTT, Recon, and Spoofing. There is a large class imbalance between these categories, with DDoS attacks making up 66.63\% of the dataset, and Spoofing attacks making up only 0.2\%. Due to the very small number of Spoofing attack samples, this category was dropped from the dataset. This was done because excessive oversampling would be needed to reduce the imbalance for this class would cause overfitting and misleading patterns, or undersampling large amounts of the majority classes would discard too much data. The distribution of the categories after removing the Spoofing category is shown in Fig~\ref{fig:TrainingSetPreSampling}. With the remaining 5 classes, a sampling pipeline is then applied to the training set, this involves undersampling the DDoS class, as well as using oversampling (SMOTE) to increase the number of samples for Benign, MQTT, and Recon traffic. After this pipeline is applied, we are left with a more balanced training set, where the largest class (DDoS) makes up 36.35\%, and the smallest (Recon) makes up 8.72\%, with the full distribution now shown in Fig~\ref{fig:TrainingSetPostSampling}. The validation and testing sets both retain the original, imbalanced distribution, this ensures that the evaluation of the model is carried out on real data and not synthetic samples.
+
+\subsubsection{Choice of SHAP for XAI}
+Following the initial project plan and literature review, the XAI section of the project was revised. Initially, both SHAP and LIME were to be used in order to evaluate the interpretability of the model. However, after testing both of these methods, the approach was altered focus only on SHAP. The main reason for this change was that SHAP provided more consistent explanations across the 5 categories, whereas when LIME was tested, the results tended to vary between tests. The SHAP framework also provided global and local interpretability and multiple types of plots to help analyse the results. To summarise, the project scope was adjusted to focus on the depth of the explanations, rather than focusing on two different explainability methods. SHAP’s Explainer was used in conjunction with a a random subset of $1,000$ instances sampled from the test set, this ensured a balance between representativeness of the dataset as well as compute time. The SHAP explainer was then used to generate the plots needed for the analysis used in the evaluation of the models interpretability.
+\subsubsection{Feature Selection and Encoding}
+Initially, the feature selection was to involve removing features with a near-zero variance. However, after initial testing, it was apparent that it lead to a decrease in the performance of the model when training on the dataset. This suggested that low variance features still had a significant impact on the models ability to learn from the dataset. As a result of this, this step was removed, and the full original set of features was then used to train the DNN. Numerical features were then scaled using a StandardScaler to ensure the DNN was able to converge during training, and categorical features were encoded with a LabelEncoder.
+
+
+\section{Implementation}
+\subsection{Dataset Pre-processing}
+The original CIC2024 IoMT dataset is organised into multiple CSV files, each of these corresponds to a specific protocol and attack type. In order to work with this data, these files were first combined into a single combined dataframe with around $8.7$ million rows of data, each row containing 45 features. The spoofing class was then dropped from the dataset (discussed in section ???), prior to any additional processing, scaling or sampling. This reduced the classification task of the model from 6 categories, to 5 unique network traffic categories: DDoS, DoS, Recon, Benign, and MQTT.
+The dataset was then split into training (80\%), validation (10\%), and testing (10\%) sets, this was done using the \texttt{traing\_test\_split} method found in the scikit-learn toolkit. Stratified sampling was also applied during this split to maintain the original imbalanced distribution, a random seed of 42 was also used at this stage to ensure the results were reproducible.
+The attack category was encoded using scikit-learns’s \texttt{LabelEncoder}, and the remaining numerical feaures were standardised using the \texttt{StandardScaler}. Feature selection was tested by dropping the top 5 features whose variance was nearest to 0, however after training the model with this step, it was apparent that this reduced the performance of the model (mention in section ???).
+
+Resampling of the dataset was carried out using a two stage sampling pipeline, with oversampling using SMOTE, followed by Random Undersampling:
+\begin{enumerate}
+    \item Oversampling was applied to Benign, MQTT, and Recon. These were oversampled using \texttt{SMOTE} with a random state of 42 to ensure reproducible results. The target sample number for Benign samples was $1.2$ million, $800,000$ for MQTT, and $600,000$ for Recon.
+    \item Undersampling was applied to the majority class, DDoS, using \texttt{RandomUnderSamping} with a target sample number of $2.5$ million rows.
+\end{enumerate}
+The distribution of the categories prior to applying this pipeline is shown in Fig~\ref{TrainingSetPreSampling}. The final distribution after the pipeline has been applied is now shown in Fig~\ref{TrainingSetPostSampling}. Crucially, both the validation and testing sets were deliberately untouched by the pipeline, to ensure the evaluation of the model is based on real data, and synthetic samples don’t affect perceived performance.
 \begin{figure}[H]
     \centering
     \begin{subfigure}{0.49\linewidth}
@@ -194,19 +213,75 @@ The CIC2024 IoMT dataset has 6 categories of network traffic: Benign, DDoS, DoS,
     \label{fig:SamplingPipeline}
 \end{figure}
 
-\subsubsection{Choice of SHAP for XAI}
-Following the initial project plan and literature review, the XAI section of the project was revised. Initially, both SHAP and LIME were to be used in order to evaluate the interpretability of the model. However, after testing both of these methods, the approach was altered focus only on SHAP. The main reason for this change was that SHAP provided more consistent explanations across the 5 categories, whereas when LIME was tested, the results tended to vary between tests. The SHAP framework also provided global and local interpretability and multiple types of plots to help analyse the results. To summarise, the project scope was adjusted to focus on the depth of the explanations, rather than focusing on two different explainability methods. SHAP’s Explainer was used in conjunction with a a random subset of $1,000$ instances sampled from the test set, this ensured a balance between representativeness of the dataset as well as compute time. The SHAP explainer was then used to generate the plots needed for the analysis used in the evaluation of the models interpretability.
-\subsubsection{Feature Selection and Encoding}
-Initially, the feature selection was to involve removing features with a near-zero variance. However, after initial testing, it was apparent that it lead to a decrease in the performance of the model when training on the dataset. This suggested that low variance features still had a significant impact on the models ability to learn from the dataset. As a result of this, this step was removed, and the full original set of features was then used to train the DNN. Numerical features were then scaled using a StandardScaler to ensure the DNN was able to converge during training, and categorical features were encoded with a LabelEncoder.
-
-
-\section{Implementation}
-\subsection{Data Pre-processing}
 \subsection{DNN Implementation}
+The Deep Neural Network (DNN) was implemented using \texttt{Tensorflow} in Python (version 3.12.3). After testing various architectures and iterative hyperparameter tuning, the final version of the architecture is shown in Table~\ref{tab:ModelArchitecture}.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        Layer          & Type                & Size/Units & Activation \\ \hline
+        Input          & Dense               & 45         & GELU       \\ \hline
+        Hidden Layer 1 & Dense               & 256        & GELU       \\ \hline
+        -              & Batch Normalisation & -          & -          \\ \hline
+        -              & Dropout             & Rate = 0.3 & -          \\ \hline
+        Hidden Layer 2 & Dense               & 128        & GELU       \\ \hline
+        -              & Batch Normalisation & -          & -          \\ \hline
+        -              & Dropout             & Rate = 0.2 & -          \\ \hline
+        Hidden Layer 3 & Dense               & 64         & GELU       \\ \hline
+        -              & Batch Normalisation & -          & -          \\ \hline
+        -              & Dropout             & Rate = 0.2 & -          \\ \hline
+        Output         & Dense               & 5          & Softmax    \\ \hline
+    \end{tabular}
+    \caption{Model architecture of DNN.}
+    \label{tab:ModelArchitecture}
+\end{table}
+After building this model using Tensorflow’s \texttt{Sequential} object, it was then compiled with the Adam optimisier and a learning rate of $3\times 10^{-4}$. The loss function used was a categorical cross-entropy, which works well for multi class classification problems. The model was then allows to train on the dataset  for $75$ epochs, with a batch size of $2048$, early stopping was also allowed with a patience of $5$ epochs to help prevent overfitting and unnecessary computation time. The \texttt{ReduceLROnPlateau} callback was also applied with a factor of $0.5$ and patience of $5$ epochs, this helped stop the model getting stuck in local optima. The loss and accuracy curves for both the training and validation sets are shown in Figure~\ref{fig:LossAccCurves}, confirming that the model was able to converge whilst avoiding too much overfitting.
+During validation, the epoch which yields the best loss was then saved, this saved model when then used throughout the evaluation and XAI analysis.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/LossAccCurves.png}
+    \caption{Loss and accuracy curves for training and validation data.}
+    \label{fig:LossAccCurves}
+\end{figure}
 \subsection{XAI Integration}
+After comparative testing between SHAP and LIME, it was apparent SHAP was more suitable for this project because the results generated by LIME were inconsistent across repetitions, and SHAP’s explainer was used instead. The trained model was used alongside a stratified sample of the test set (1000 samples), and a background dataset taken from the training set. Using a stratified sample meant that all of the categories were represented in the correct distributions found in the testing sets, and the explanations were not overwhelmed by the majority class (DDoS).
+To begin with, a summary bar plot was generated to show the top $10$ features which had the highest SHAP values, meaning they had the largest influence on the models decisions. This plot also broken down the bars into 5 sections, showing how much influence the feature had on the prediction of each class.
+Beeswarm plots were also generated, one for each class, these plotted the top $5$ features which influenced the model to predict the given class. These plots also showed the value of the features, which give a more in depth look at how the value of a feature either pushed the model toward or away from predicting the given class, such as a high packet rate pushing the model toward DoS or DDoS.
+Using a sample size of $1000$ for the SHAP analysis yielded consistent results during testing, this value was settled on, because larger samples increased the computation time drastically. This sample size balanced the quality of the plots and the time it takes to produce them.
 
 \section{Results, Testing, and Evaluation}
 \subsection{Model Performance}
+After training was complete, the best saved model was evaluated on the unaltered testing set, this set retained the original highly imbalanced dataset which was mentioned during the sampling pipeline. The testing set contained around $875000$ rows of data, which made up $10\%$ of the dataset.
+The model achieved a macro average F1-score of $0.8603$, this exceeds the target score of $0.8$ set out in the objectives of the project which shows that the model is more than able tot distinguish between the $5$ attack categories presented in this classification task. This metric was chosen over just the accuracy because of the imbalanced nature of the test set mention previously. Looking closer at the results, shown in Table~\ref{tab:ClassificationReport}, the following can be seen across the classes:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Class}        & \textbf{Precision}         & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+        \midrule
+        Benign                & 0.9687                     & 0.9818          & 0.9752            & 23,034           \\
+        DDoS                  & 0.8219                     & 0.8346          & 0.8282            & 584,663          \\
+        DoS                   & 0.5463                     & 0.5242          & 0.5350            & 222,221          \\
+        MQTT                  & 0.9945                     & 0.9920          & 0.9933            & 32,665           \\
+        Recon                 & 0.9779                     & 0.9616          & 0.9697            & 13,140           \\
+        \midrule
+        \textbf{Accuracy}     & \multicolumn{4}{c}{0.7674}                                                          \\
+        \midrule
+        \textbf{Macro Avg}    & 0.8619                     & 0.8588          & \textbf{0.8603}   & 875,723          \\
+        \textbf{Weighted Avg} & 0.7646                     & 0.7674          & 0.7659            & 875,723          \\
+        \bottomrule
+    \end{tabular}
+    \caption{Model Performance Evaluation Using Precision, Recall, and F1-Score}
+    \label{tab:ClassificationReport}
+\end{table}
+\begin{itemize}
+    \item Benign: F1-score of $0.9752$, the model performs very well in identifying when traffic is benign, and has a low rate of false positives and false negatives for normal IoMT traffic.
+    \item MQTT: Model achieved it’s best performance on this class, with an F1-score of $0.9933$, showing it can reliably detect when traffic belongs to the category of attacks over MQTT.
+    \item Recon: F1-score of $0.9697$, model also had very strong performance on this class, showing it was able to distinguish between the other classes and reconnaissance attacks.
+    \item DDoS: The model achieved an F1-score of $0.8282$ on this class, this performance is still good, but not as strong as the other classes. The recall was $0.8346$, and precision $0.8219$, suggesting the model confuses this category with other attack types. Suggesting the features used to identify DDoS and DoS are overlapping and causing misidentifications.
+    \item DoS: This was the weakest class for the model, where it achieved an F1-Score of $0.5350$, showing that the model struggles to identify DoS attacks, which could be a result of similar feature values to DDoS attacks.
+\end{itemize}
 \subsection{Comparative Analysis}
 \subsection{XAI Evaluation}
 
