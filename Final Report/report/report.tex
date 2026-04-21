@@ -282,9 +282,61 @@ The model achieved a macro average F1-score of $0.8603$, this exceeds the target
     \item DDoS: The model achieved an F1-score of $0.8282$ on this class, this performance is still good, but not as strong as the other classes. The recall was $0.8346$, and precision $0.8219$, suggesting the model confuses this category with other attack types. Suggesting the features used to identify DDoS and DoS are overlapping and causing misidentifications.
     \item DoS: This was the weakest class for the model, where it achieved an F1-Score of $0.5350$, showing that the model struggles to identify DoS attacks, which could be a result of similar feature values to DDoS attacks.
 \end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/ConfusionMatrix.png}
+    \caption{Confusion matrix showing models performance across all 5 classes.}
+    \label{fig:ConfusionMatrix}
+\end{figure}
+To provide further insight into the misclassifications made by the model, the confusion matrix in Fig~\ref{fig:ConfusionMatrix} highlights where the model made mistakes. The majority of confusion is found between DDoS and DoS attacks. With $96,726$ DDoS being misclassifed as DoS, and $105,727$ DoS being misclassified as DDoS. This is most likely due to the similarities these attacks share, the model struggles to learn the boundary between the two with the current feature set. This will be explored further when the SHAP analysis is conducted, to see what features are leading to each of the predicted classes. One way this could be remedied is by grouping the DDoS and DoS attack categories into one larger class, as both of these attacks would have the same affect on an IoMT network by disrupting services. However, the low recall for DoS class would need improving for this IDS to be deployed, this is because large amounts of false negative flags for DoS would lead to large disruptions from these types of attack.
 \subsection{Comparative Analysis}
+The benchmark the performance of the DNN, it can be compared to the baseline performance of the DNN proposed in the original CIC2024 IoMT dataset paper. The model shown in this paper was tested on a 6 class problem, which is the closest comparison to this projects model, just without the small Spoofing class. The DNN proposed in the original paper achieved an F1-score of 0.665 \cite{dadkhah2024ciciomt2024}, which was significantly beaten by the model proposed in this project, which achieved an F1-score of $0.8603$. The model also outperformed the other model types tested in the original paper significantly, with the highest F1-score being from the Logistic Regression model, that achieved $0.694$.
+The improvement in performance in this DNN is likely down to the resampling pipeline introduced during the pre-processing of the dataset, which the original paper makes not mention of. Making the training set have a more balanced class representation allowed the model to learn from a more general representation of IoMT network traffic. Another reason for the higher F1-score could be the more complex model architecture introduced, which was able to learn the complex underlying patterns in the dataset from the 45 numerical features.
 \subsection{XAI Evaluation}
-
+To carry out the SHAP analysis, $1,000$ samples were taken from the test set, this sample was stratified to ensure the class distribution was preserved and not affected by the large imbalance. Global plots were then produced, followed by a more in-depth look into per class feature importance plots.
+\subsubsection{Global Feature Importance}
+The global SHAP summary plot shown in Figure~\ref{fig:GlobalSHAPPlot} maps out the mean absolute SHAP values across all the predictions made. The top $10$ features with the highest mean absolute SHAP values are ranked from the most important at the top, to the least at the bottom.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/GlobalSHAP.png}
+    \caption{Loss and accuracy curves for training and validation data.}
+    \label{fig:GlobalSHAPPlot}
+\end{figure}
+These results indicate that \texttt{Weight} is the biggest driver behind the model’s predictions, this reflects the role the amount of data in a network packet plays in the type of traffic it is, with weight effecting how likely the model classifies a packet as Recon.
+\texttt{SRate} and \texttt{syn\_count} were also very large drivers behind predictions, heavily influencing the classificiations of DoS and DDoS, suggesting the amount of packets being sent over the network is able to determine whether it is a DDoS or DoS attack.
+\texttt{IAT} (Inter-Arrival Time) was a also a large driver behind predictions, mostly for Recon traffic, suggesting the time between packets being sent significantly affects how likely it is to be a reconnaissance attack.
+\subsubsection{Per-Class SHAP Analysis}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/beeswarm_Benign.png}
+    \caption{Beeswarm summary plot for Benign class.}
+    \label{fig:BenignSHAP}
+\end{figure}
+Fig~\ref{fig:BenignSHAP} shows that high values of packet \texttt{Weight} suggest that the sample belongs to the Benign class, and when the weight is low, the model is more likely to classify it as one of the other traffic categories. Another notable feature here is the Inter Arrival Time (IAT), as the value of this feature increases, the model is more likely to classify a packet as benign. This aligns with expectations that genuine human generated traffic involves larger packet weights and time between packets. Whereas automated attacks like DDoS and DoS would have short time between packets and low weights.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/beeswarm_MQTT.png}
+    \caption{Beeswarm summary plot for MQTT class.}
+    \label{fig:MQTTSHAP}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/beeswarm_Recon.png}
+    \caption{Beeswarm summary plot for Recon class.}
+    \label{fig:ReconSHAP}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/beeswarm_DDoS.png}
+    \caption{Beeswarm summary plot for DDoS class.}
+    \label{fig:DDoSSHAP}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{images/beeswarm_DoS.png}
+    \caption{Beeswarm summary plot for DoS class.}
+    \label{fig:DoSSHAP}
+\end{figure}
 \section{Reflection and Conclusion}
 \subsection{Critical Reflection}
 \subsection{Conclusion}
