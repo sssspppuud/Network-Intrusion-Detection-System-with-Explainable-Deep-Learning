@@ -106,6 +106,10 @@ Finally, the Cloud (application) layer is at risk of various software vulnerabil
     \label{fig:IoMTLayers}
 \end{figure}
 
+%extned this to two pagessss then remove newpage
+\newpage
+
+
 \subsubsection{Evolution of Intrusion Detection}
 Recent research focuses on using hybrid ML methods for intrusion detection, this is because these models such as Random Forest and deep reinforcement learning such as a Double Deep Q-Network (DDQN) \cite{da2019internet,lopez2020application} overcome the limitations of traditional signature based systems. These models show strong performance on test datasets like NSL-KDD \cite{nslkdddataset}, however these models would likely struggle to perform as well in real world healthcare settings because of the specific lightweight protocols used in IoMT systems such as MQTT. To address this issue, this project will use the CIC2024 IoMT dataset, this is because it provides a more realistic IoMT benchmark which simulates 40 different IoMT devices and modern attack types which are specific to IoMT networks.
 
@@ -319,26 +323,39 @@ Fig~\ref{fig:BenignSHAP} shows that high values of packet \texttt{Weight} sugges
     \caption{Beeswarm summary plot for MQTT class.}
     \label{fig:MQTTSHAP}
 \end{figure}
+Fig~\ref{fig:MQTTSHAP} shows that a high \texttt{ack\_flag\_number} causes the model to point toward a MQTT attack classification. The high number of acknowledgements made in attacks like MQTT floods are explain the importance of this predictor. The model has also learned that high values of \texttt{TCP}, which represents the average number of TCP packets in the window, point toward an MQTT attack. This could be because of the protocols reliance on TCP for it’s communication.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\linewidth]{images/beeswarm_Recon.png}
     \caption{Beeswarm summary plot for Recon class.}
     \label{fig:ReconSHAP}
 \end{figure}
+Fig~\ref{fig:ReconSHAP} highlights that the model heavily relies on a high \texttt{fin\_count} to classify a sample as a recon attack, this aligns with reconaissance techniques like FIN scanning, where a large number of finish flags signifies malicious activity. On the other hand, a low \texttt{rst\_count} pushes the models prediction away from a Recon attack, and to another class, suggesting the model has learned to tell the difference between attacks with high reset counts like DoS.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\linewidth]{images/beeswarm_DDoS.png}
     \caption{Beeswarm summary plot for DDoS class.}
     \label{fig:DDoSSHAP}
 \end{figure}
+In Fig~\ref{fig:DDoSSHAP} it can be seen that the most influential feature for classifiying samples as DDoS is SRate, a high SRate pushes the model towards a DDoS classification, this aligns with the known attack signature of DDoS attacks, where there are a high number of packets being sent. Furthermore, high values for the $ICMP$ and $TCP$ features push the model toward predicting DDoS, these features represent the number of ICMP packets and TCP packets being sent in a window respectively. A high number of TCP and ICMP packets aligns with the types of DDoS attacks which are within the dataset, with ICMP DDoS and TCP DDoS being amongst the largest specific attacks in the dataset.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\linewidth]{images/beeswarm_DoS.png}
     \caption{Beeswarm summary plot for DoS class.}
     \label{fig:DoSSHAP}
 \end{figure}
+Fig~\ref{fig:DoSSHAP} gives insight into the limitations of this DNN, namely the confusion it has between DDoS and DoS classifications. It can be seen that the model relies a lot on \texttt{SRate} and \texttt{syn\_count} for the DoS class, similar to the DDoS class shown in Fig~\ref{fig:DDoSSHAP}, but incorrectly uses the features when looking at DoS. A high \texttt{Srate} pushes the model away from a DoS prediction, and high ICMP and TCP values pushes it away from DoS, these results are no the ones expected for this class. The feature overlap with SRate could be the main reason for the limited boundary between the two, and future models would benefit from incorporating source and destination IP’s to see whether the packets are coming from one source, or many.
+
 \section{Reflection and Conclusion}
 \subsection{Critical Reflection}
+\subsubsection{Successes}
+Throughout the course of this project, all of the primary objectives set out in the beginning have been met. Firstly, the DNN achieved a macro average F1 score of $0.8603$ during it’s evaluation on the test set, this is significantly more than the target score and shows the model successfully learned to classify the $5$ classes presented in the dataset. The model excelled in identifying MQTT attacks, Benign traffic, and Recon traffic, with excellent F1-scores on these $3$ classes. Furthermore, this performance was significantly better than the benchmark F1-score presented in the CIC2024 IoMT paper, in which the DNN achieved an F1-score of 0.665. This improvement is mainly a result of the sampling pipeline applied to the dataset, which allows the model to generalise rather than overfit to the imbalanced training data.
+The decision to discard the Spoofing was crucial in improving the performance of this model. The Spoofing class only contained $17791$ samples, which was very small in comparison to the largest class, DDoS, which contained over $5846623$. Attempting to oversample to compensate for this difference would not reflect real world data and skew the training, and undersampling would mean lots of data would be discarded. The decision to solely focus on SHAP for the XAI analysis, rather than both SHAP and LIME was also a well justified alteration to the initial goals of the project. The instability in results produced by LIME would have conflicted with the projects aim to maximise trust and interpretability of the IDS. Choosing to just use SHAP allowed for more in depth and reliable results.
+The SHAP analysis gave insight into the models strengths, with the per class beeswarm plots showing how the model learned feature patterns that align with existing cybersecurity knowledge of attack types. For example, a high \texttt{SRate} as well as high \\texttt{ICMP} and \texttt{TCP} packet counts pushed the model toward predicting a DDoS attack. This result helps assure that the model is generalising about the attack signatures in IoMT network traffic, and not just exploiting patterns specific to the training data.
+
+\subsubsection{Limitations}
+The main drawback of the model in this IDS is the poor performance when classifying DoS attacks, for which the F1 score was only $0.5350$. This becomes more apparent in the confusion matrix in Fig~\ref{ConfusionMatrix}, where $105,727$ DoS instances were incorrectly classified as DDoS. Similarly, $96,726$ DDoS samples were incorrectly classified as DoS attacks, making it clear that the DNN struggled to find a clear boundary between the two classes. Using the SHAP summary plots found in Fig~\ref{fig:DoSSHAP} and Fig~\ref{fig:DDoSSHAP}, it is clear that the model relies heavily on $SRate$ and $syn\_count$ for both of these classes, but with the directions in the SHAP plots inverted. The SHAP plot for DoS shows this inverted direction where a high \texttt{SRate} pushes the model away from predicted DoS, this is not expected behaviour as this attack type should be characterised by the opposite value. The main reason for this is the CIC2024 IoMT datasets lack of source as well as destination IP addresses, having this within the feature set would allow models to find this boundary between DoS and DDoS traffic, where DoS comes from a single source, and DDoS comes from many. This limitation would need to be a addressed in a deployment of this IDS to an IoMT network, because the high false negative rate would lead to significant disruption to healthcare services due to missed DoS attacks.
+
 \subsection{Conclusion}
 \subsection{Future Directions}
 
