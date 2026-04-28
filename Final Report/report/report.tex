@@ -35,7 +35,7 @@
 \setlength{\cftbeforesecskip}{10pt}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{1em}
+\setlength{\parskip}{0.75em}
 
 % unticked checkbox
 \newlist{checkbox}{itemize}{2}
@@ -123,6 +123,7 @@ Recent research focuses on using hybrid ML methods for intrusion detection, this
 \subsection{Explainable AI (XAI)}
 Explainable Artificial Intelligence (XAI) includes tools that allow the decision making process of a deep learning model to be understandable to humans. This is mainly in the form of showing which features a model has used when making a classification, and how it has used these features. This project will use Shapley Additive Explanations (SHAP), which is an XAI method that assigns each numerical feature an importance value based on how it contributes to the model’s final output. Researchers in \cite{wang2020explainable}introduced a framework that uses SHAP alongside the NSL-KDD dataset \cite{nslkdddataset} in order to evaluate the performance of an IoT IDS, this paper mentions the limitations of the framework, suggesting more datasets should be tested to expand upon the explainability of the system. The research applying these XAI techniques specifically to IoMT scenarios is currently limited, and this project focuses on this gap.
 
+\section{Project Specification}
 \subsection{Motivation}
 ML based IDSs are able to recognise the complex patterns found in network traffic to identify malicious activity, which is a major drawback of simple rule based systems \cite{fidelisecurity}. However, the lack of interpretability of these ML based systems limits the widespread adoption, especially in healthcare settings where the safety and privacy of both patients and staff are critical. To address this lack of interpretability in more complex models, this project focuses on this critical gap by developing a Deep Neural Network (DNN) IDS, and uses Explainable Artificial Intelligence (XAI) techniques to verify the performance and accuracy of the model.
 
@@ -167,9 +168,10 @@ The model implemented in this project was a Deep Neural Network (DNN), this mode
 In the original paper, the DNN achieved strong F1 scores on both the binary and multi-class classification tasks, only being being beaten by the Random Forest classifier for a binary classification. The model proposed in this project will classify five categories of network traffic, in the original paper, the best F1 score for $6$ classes was $0.694$, achieved by a Logistic Regression model. Another reason for choosing this model type is that DNNs have more complex internal architectures, making XAI integration more valuable, which is crucial for healthcare setting in this project. The F1-score of $0.665$ for the DNN also leaves lots of room for improvement.
 
 \subsubsection{Dataset}
-To train and benchmark the mTo train and benchmark the model implemented in this project, the CIC2024 IoMT dataset will be used \cite{dadkhah2024ciciomt2024}, this was chosen over other commonly used IoT network traffic datasets such as the NSL-KDD, CICIDS2017, and ToN\_IoT \cite{nslkdddataset, cicids2017dataset, toniotdataset}. The CIC2024 IoMT dataset was specifically made to capture realistic traffic flows found in IoMT networks, it uses common protocols used by IoMT devices such as MQTT, Bluetooth, and Wi-Fi, which are not as common in these other datasets. It also simulates 18 different attack types which are focused on 40 simulated IoMT devices, making the simulated attack surface large and varied.
+To train and benchmark the model implemented in this project, the CIC2024 IoMT dataset will be used, this was chosen over other commonly used IoT network traffic datasets such as the NSL-KDD and CICIDS2017. The CIC2024 IoMT dataset was specifically made to capture realistic traffic flows found in IoMT networks, it uses common protocols used by IoMT devices such as MQTT, Bluetooth, and Wi-Fi, which are not as common in these other datasets. The dataset also simulates 18 different attack types which are focused on 40 simulated IoMT devices, making the attack surface large and varied.
 
-Finally, the dataset is easily accessible online for reproducing the results, it also does not contain any personal patient data or medical information, ensuring there are no ethical concerns with data privacy. Prior to applying any sampling pipelines or training the model, the dataset is split into training, validation, and testing sets, with 80\% in the training set and 10\% in both validation and testing sets.odel implemented in this project, the CIC2024 IoMT dataset will be used, this was chosen over other commonly used IoT network traffic datasets such as the NSL-KDD and CICIDS2017. The CIC2024 IoMT dataset was specifically made to capture realistic traffic flows found in IoMT networks, it uses common protocols used by IoMT devices such as MQTT, Bluetooth, and Wi-Fi, which are not as common in these other datasets. It also simulates 18 different attack types which are focused on 40 simulated IoMT devices, making the attack surface large and varied. Finally, the dataset is easily accessible online for reproducing the results, it also does not contain any personal patient data or medical information, ensuring there are no ethical concerns with data privacy. Prior to applying any sampling pipelines or training the model, the dataset is split into training, validation, and testing sets, with 80% in the training set and 10% in both validation and testing sets.
+Finally, the dataset is easily accessible online for reproducing the results, it also does not contain any personal patient data or medical information, ensuring there are no ethical concerns with data privacy. Prior to applying any sampling pipelines or training the model, the dataset is split into training, validation, and testing sets, with 80\% in the training set and 10\% in both validation and testing sets.
+
 \subsubsection{Class Imbalance Fix}
 The CIC2024 IoMT dataset has 6 categories of network traffic: Benign, DDoS, DoS, MQTT, Recon, and Spoofing. There is a large class imbalance between these categories, with DDoS attacks making up 66.63\% of the dataset, and Spoofing attacks making up only 0.2\%. Due to the very small number of Spoofing attack samples, this category was dropped from the dataset. This was done because excessive oversampling would be needed to reduce the imbalance for this class and would likely cause overfitting and misleading patterns disrupting the model’s training, or undersampling large amounts of the majority classes would discard too much data.
 
@@ -255,7 +257,8 @@ The model was then allows to train on the dataset for a maximum of $75$ epochs, 
 
 The loss and accuracy curves for both the training and validation sets during training are shown in Figure~\ref{fig:LossAccCurves}, confirming that the model was able to converge whilst avoiding too much overfitting.
 
-During validation, the epoch which yields the best loss was then saved, this saved model when then used throughout the evaluation and XAI analysis.
+During validation, the epoch that yielded the best loss was then saved, this saved model when then used throughout the evaluation and XAI analysis, saving computation time and resources whilst the evaluation was refined.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\linewidth]{images/LossAccCurves.png}
@@ -414,10 +417,9 @@ In relation to the objectives set out for this project:
 \subsection{Future Directions}
 The main direction this work could be extended is through incorporating IP based features such as the source and destination addresses of traffic into the dataset. This would likely improve the models ability to distinguish between DoS and DDoS attacks, subsequently increasing the overall model performance. The SHAP analysis as well as the low recall for DoS traffic of $0.5242$ show it currently struggles to distinguish this class from DDoS. Adding these additional features would be an immediate improvement, the sampling pipeline and training process would need little alteration to include it.
 
-The removal of the Spoofing class would mean that the system would not be able to detect this type of attack if it were to be deployed. This is a meaningful gap, as attack types like MITM and ARP spoofing are real threats to data privacy, future work could explore other methods to produce more samples in this class. A Tabular Variational Autoencoder (TVAE) cold be a promising solution to this, by producing synthetic samples that preserve properties of the attacks, recent research looks into using various alternatives to SMOTE for addressing class imbalances in network traffic data \cite{fi17120561}.
+The removal of the Spoofing class would mean that the system would not be able to detect this type of attack if it were to be deployed. This is a meaningful gap, as attack types like MITM and ARP spoofing are real threats to data privacy, future work could explore other methods to produce more samples in this class. A Tabular Variational Autoencoder (TVAE) could be a promising solution to this, by producing synthetic samples that preserve properties of the attacks, recent research looks into using various alternatives to SMOTE for addressing class imbalances in network traffic data \cite{fi17120561}.
 
 The missed stretch goal could also be implemented, to test whether this improves model performance, this would involve combining the DDoS and DoS classes into a single class, and altering the pipeline and model architecture accordingly.
-
 
 
 
